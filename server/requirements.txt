@@ -9,3 +9,4 @@ psycopg2-binary==2.9.10
 gunicorn==21.2.0
 google-auth>=2.25.0  # <-- NEW
 requests>=2.31.0     # <-- NEW
+Flask-Cors==3.0.10

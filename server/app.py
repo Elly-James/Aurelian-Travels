@@ -1,4 +1,9 @@
 import os
+
+from flask_cors import CORS  # Must import this
+
+    
+   
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -16,6 +21,9 @@ import requests
 
 def create_app():
     app = Flask(__name__)
+
+     # Initialize CORS first
+    cors = CORS(app)  
     
     load_dotenv()
     
