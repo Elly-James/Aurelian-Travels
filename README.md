@@ -1,74 +1,210 @@
-<<<<<<< HEAD
-# react-project1
-=======
-# Getting Started with Create React App
+# Aurelian Travels
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aurelian Travels is a full-stack web application that allows users to explore, suggest, and book travel destinations in Kenya and internationally. Users can browse single destinations and holiday packages, submit suggestions for new destinations, leave reviews, and manage bookings. The application is built with a Flask API backend and a React frontend, providing a seamless user experience for travel enthusiasts.
 
-## Available Scripts
+## Table of Contents
+- [Aurelian Travels](#aurelian-travels)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Technologies Used](#technologies-used)
+    - [Backend](#backend)
+    - [Frontend](#frontend)
+    - [Database](#database)
+  - [Project Structure](#project-structure)
+  - [Setup Instructions](#setup-instructions)
+    - [Prerequisites](#prerequisites)
+    - [Backend Setup](#backend-setup)
+    - [Frontend Setup](#frontend-setup)
+    - [Database Setup](#database-setup)
+  - [API Endpoints](#api-endpoints)
+    - [Authentication](#authentication)
+    - [Destinations](#destinations)
+    - [Reviews](#reviews)
+    - [Bookings](#bookings)
+  - [Future Enhancements](#future-enhancements)
+    - [Authors](#authors)
+  - [License](#license)
 
-In the project directory, you can run:
+## Features
+Aurelian Travels offers the following features:
 
-### `npm start`
+- **Browse Destinations**:
+  - View Kenyan and International destinations, categorized into single destinations and holiday packages
+  - Each destination includes details like title, location, description, fees, and an image
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Suggest New Destinations**:
+  - Users can suggest new destinations via form submission
+  - Suggestions are saved and immediately visible on the frontend
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **User Authentication**:
+  - Register and log in with email/password
+  - Google and Apple OAuth login support
+  - JWT-based authentication with token refresh
+  - Logout functionality
 
-### `npm test`
+- **Reviews**:
+  - Submit reviews with ratings (1-5) and optional comments
+  - View destination reviews with reviewer details
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Bookings**:
+  - Book destinations with travel details
+  - View and cancel bookings
 
-### `npm run build`
+- **Search and Filter**:
+  - Search by title, location, or maximum price
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Responsive Design**:
+  - Mobile-friendly interface
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Technologies Used
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Backend
+- Flask (Python web framework)
+- Flask-SQLAlchemy (ORM)
+- Flask-Migrate (Database migrations)
+- Flask-JWT-Extended (Authentication)
+- Flask-Bcrypt (Password hashing)
+- Flask-CORS (Cross-Origin Resource Sharing)
+- Psycopg2 (PostgreSQL adapter)
+- Python-dotenv (Environment variables)
 
-### `npm run eject`
+### Frontend
+- React
+- React Router
+- Axios (HTTP client)
+- Sassy SCSS (Styling)
+- React Context API (State management)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Database
+- PostgreSQL
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Project Structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```text
+aurelian-travels/
+├── server/                        # Backend code
+│   ├── app.py                     # Main Flask application
+│   ├── models.py                  # Database models
+│   ├── extensions.py              # Flask extensions
+│   ├── migrations/                # Database migrations
+│   ├── seed.py                    # Database seeding script
+│   └── .env                       # Environment variables
+├── client/                        # Frontend code
+│   ├── src/                       # React source
+│   │   ├── components/            # React components
+│   │   ├── context/               # State management
+│   │   ├── App.js                 # Main app
+│   │   └── index.js               # Entry point
+│   ├── public/                    # Static assets
+│   ├── package.json               # Dependencies
+│   └── .env                       # Environment variables
+├── README.md                      # Documentation
+└── .gitignore                     # Git ignore rules
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
 
-## Learn More
+##  Setup Instructions
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Prerequisites
+Python 3.11+
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Node.js 18+
 
-### Code Splitting
+PostgreSQL
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Git
 
-### Analyzing the Bundle Size
+### Backend Setup
+ * Clone the repository: ``git clone https://github.com/your-username/   aurelian-travels.git``
+  
+* cd aurelian-travels/server
+* Set up virtual environment: ``python -m venv venv``
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+* Install dependencies: pip install -r requirements.txt
+* Configure environment variables (create .env file): ``env``
 
-### Making a Progressive Web App
+    * SECRET_KEY=your-secret-key
+    * JWT_SECRET_KEY=your-jwt-secret-key
+   * DATABASE_URL=postgresql://username:password@localhost:5432/aurelian_travels
+  
+* Run the backend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+   * python app.py
+  
+### Frontend Setup
 
-### Advanced Configuration
+* Navigate to frontend directory: ``cd ../client``
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* Install dependencies: ``npm install``
+* Configure environment variables (create .env file): ``env``
+    * REACT_APP_API_URL=http://localhost:5000
+* Run the frontend: ``npm start``
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Database Setup
+* Create PostgreSQL database: ``psql -U username -c "CREATE DATABASE aurelian_travels;"``
+* Apply migrations:
+    * flask db init
+    * flask db migrate
+    * flask db upgrade
+    * Seed database:``python seed.py``
 
-### `npm run build` fails to minify
+* Start both backend (python app.py) and frontend (npm start)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
->>>>>>> d1f0012 (Added changes)
+* Access the application at http://localhost:3000
+## API Endpoints
+
+### Authentication
+- **POST** `/api/auth/register`  
+  User registration
+- **POST** `/api/auth/login`  
+  User login
+- **POST** `/api/auth/logout`  
+  User logout
+- **POST** `/api/auth/refresh`  
+  Refresh token
+
+### Destinations
+- **GET** `/api/destinations`  
+  Get all destinations
+- **GET** `/api/destinations/<id>`  
+  Get specific destination
+- **POST** `/api/destinations/suggest`  
+  Suggest new destination
+
+### Reviews
+- **POST** `/api/destinations/<id>/reviews`  
+  Submit review
+- **GET** `/api/destinations/<id>/reviews`  
+  Get destination reviews
+
+### Bookings
+- **GET** `/api/bookings`  
+  Get user bookings
+- **POST** `/api/bookings`  
+  Create booking
+- **DELETE** `/api/bookings/<id>`  
+  Cancel booking
+
+## Future Enhancements
+- Implement favorites with user notes
+- Full CRUD for all resources
+- Formik integration for forms
+- Map-based destination search
+- Rating filters
+- Profile management
+
+
+### Authors
+* Edith Gatwiri  <edithgatwiri70@gmail.com>
+* Elly James    <ellykomunga@gmail.com>
+* Helen Wairagu  <hwangari3@gmail.com>
+* Ian Gathua
+* Edwin Ngigi
+
+Incase you are stuck or experiencing any error, reach out to us via our respective emails
+
+## License
+This project is licensed under the MIT License.
+
+
