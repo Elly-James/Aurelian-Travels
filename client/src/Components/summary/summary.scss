@@ -1,0 +1,603 @@
+:root {
+  --PrimaryColor: hsl(199, 100%, 33%);
+  --SecondaryColor: hsl(187, 85%, 43%);
+  --SecondaryColorDark: hsl(187, 85%, 33%);
+  --whiteColor: hsl(0, 0%, 100%);
+  --blackColor: hsl(201, 33%, 16%);
+  --textColor: hsl(240, 4%, 36%);
+  --greyText: rgb(190, 190, 190);
+  --inputColor: rgb(239, 239, 239);
+  --bodyColor: rgb(240, 240, 246);
+  --cardBG: rgb(225, 225, 235);
+  --cardHover: rgb(255, 255, 255);
+  --shadowSm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadowMd: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadowLg: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --transition: all 0.3s ease;
+}
+
+.summary {
+  padding: 6rem 1rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 10rem);
+  background: var(--bodyColor);
+
+  .secTitle {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .title {
+      font-size: 2.5rem;
+      color: var(--blackColor);
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--PrimaryColor);
+        border-radius: 2px;
+      }
+    }
+
+    .subtitle {
+      color: var(--textColor);
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      font-weight: 400;
+    }
+
+    .error-message {
+      color: var(--SecondaryColorDark);
+      background: var(--cardHover);
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      box-shadow: var(--shadowSm);
+      font-size: 0.9rem;
+    }
+  }
+
+  .emptySummary {
+    text-align: center;
+    padding: 3rem;
+    background: var(--cardHover);
+    border-radius: 12px;
+    box-shadow: var(--shadowMd);
+    max-width: 600px;
+    margin: 0 auto;
+
+    p {
+      font-size: 1.2rem;
+      color: var(--textColor);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .emptySummaryActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+
+      .btn {
+        padding: 0.8rem 2rem;
+        background: var(--PrimaryColor);
+        color: var(--whiteColor);
+        border-radius: 25px;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        box-shadow: var(--shadowSm);
+        transition: var(--transition);
+
+        &:hover {
+          background: var(--SecondaryColor);
+          transform: translateY(-2px);
+          box-shadow: var(--shadowMd);
+        }
+      }
+    }
+  }
+
+  .summaryContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .bookingsList {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .bookingItem {
+      background: var(--cardHover);
+      border-radius: 12px;
+      box-shadow: var(--shadowMd);
+      padding: 1.5rem;
+      transition: var(--transition);
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadowLg);
+      }
+
+      @media (min-width: 992px) {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 2rem;
+      }
+
+      .itemImage {
+        img {
+          width: 100%;
+          height: 250px;
+          object-fit: cover;
+          border-radius: 8px;
+          transition: transform 0.5s ease;
+        }
+
+        &:hover img {
+          transform: scale(1.05);
+        }
+      }
+
+      .itemDetails {
+        h4 {
+          font-size: 1.6rem;
+          color: var(--blackColor);
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+        }
+
+        .location {
+          display: flex;
+          align-items: center;
+          color: var(--textColor);
+          font-size: 1rem;
+          margin-bottom: 0.5rem;
+
+          .icon {
+            color: var(--PrimaryColor);
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+          }
+        }
+
+        .price {
+          color: var(--PrimaryColor);
+          font-size: 1.4rem;
+          font-weight: 700;
+          margin: 0.5rem 0;
+        }
+
+        .description {
+          color: var(--textColor);
+          font-size: 0.95rem;
+          line-height: 1.5;
+          margin: 0.5rem 0;
+        }
+
+        .editForm {
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid var(--greyText);
+
+          .formRow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+
+            @media (max-width: 768px) {
+              grid-template-columns: 1fr;
+            }
+          }
+
+          .formGroup {
+            display: flex;
+            flex-direction: column;
+
+            label {
+              font-size: 0.9rem;
+              color: var(--blackColor);
+              font-weight: 500;
+              margin-bottom: 0.4rem;
+            }
+
+            input, textarea {
+              padding: 0.8rem;
+              border: 1px solid var(--greyText);
+              border-radius: 6px;
+              font-size: 0.9rem;
+              transition: var(--transition);
+
+              &:focus {
+                outline: none;
+                border-color: var(--PrimaryColor);
+                box-shadow: 0 0 0 2px rgba(25, 130, 196, 0.2);
+              }
+            }
+
+            textarea {
+              min-height: 80px;
+              resize: vertical;
+            }
+          }
+
+          .formActions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+
+            .saveBtn {
+              padding: 0.7rem 1.5rem;
+              background: var(--PrimaryColor);
+              color: var(--whiteColor);
+              border: none;
+              border-radius: 6px;
+              font-size: 0.9rem;
+              font-weight: 500;
+              cursor: pointer;
+              transition: var(--transition);
+
+              &:hover {
+                background: var(--SecondaryColor);
+                transform: translateY(-2px);
+              }
+            }
+
+            .cancelBtn {
+              padding: 0.7rem 1.5rem;
+              background: var(--greyText);
+              color: var(--blackColor);
+              border: none;
+              border-radius: 6px;
+              font-size: 0.9rem;
+              font-weight: 500;
+              cursor: pointer;
+              transition: var(--transition);
+
+              &:hover {
+                background: var(--textColor);
+                color: var(--whiteColor);
+                transform: translateY(-2px);
+              }
+            }
+          }
+        }
+
+        .bookingInfo {
+          p {
+            font-size: 0.95rem;
+            color: var(--textColor);
+            margin: 0.4rem 0;
+            line-height: 1.5;
+
+            strong {
+              color: var(--blackColor);
+              margin-right: 0.5rem;
+            }
+          }
+
+          .itemActions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+
+            .editBtn, .removeBtn {
+              flex: 1;
+              padding: 0.8rem;
+              border: none;
+              border-radius: 6px;
+              font-size: 0.9rem;
+              font-weight: 500;
+              cursor: pointer;
+              transition: var(--transition);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 0.5rem;
+
+              .icon {
+                font-size: 1.2rem;
+              }
+            }
+
+            .editBtn {
+              background: var(--PrimaryColor);
+              color: var(--whiteColor);
+
+              &:hover:not(:disabled) {
+                background: var(--SecondaryColor);
+                transform: translateY(-2px);
+              }
+            }
+
+            .removeBtn {
+              background: var(--SecondaryColorDark);
+              color: var(--whiteColor);
+
+              &:hover:not(:disabled) {
+                background: var(--SecondaryColor);
+                transform: translateY(-2px);
+              }
+            }
+
+            .editBtn:disabled, .removeBtn:disabled {
+              background: var(--greyText);
+              cursor: not-allowed;
+              opacity: 0.6;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .totalAmount {
+    padding: 1.5rem;
+    background: var(--cardHover);
+    border-radius: 12px;
+    box-shadow: var(--shadowMd);
+    margin: 1rem 0;
+
+    h4 {
+      font-size: 1.4rem;
+      color: var(--blackColor);
+      margin-bottom: 1rem;
+      font-weight: 600;
+      border-bottom: 2px solid var(--PrimaryColor);
+      padding-bottom: 0.5rem;
+    }
+
+    .amountDetails {
+      p {
+        font-size: 1.2rem;
+        color: var(--textColor);
+        margin: 0.5rem 0;
+
+        strong {
+          color: var(--blackColor);
+          margin-right: 0.5rem;
+        }
+      }
+
+      .conversionNote {
+        font-size: 0.85rem;
+        color: var(--textColor);
+        margin-left: 0.5rem;
+      }
+    }
+  }
+
+  .paymentSection {
+    margin: 1rem 0;
+
+    .summaryCard {
+      padding: 1.5rem;
+      background: var(--cardHover);
+      border-radius: 12px;
+      box-shadow: var(--shadowMd);
+
+      h4 {
+        font-size: 1.4rem;
+        color: var(--blackColor);
+        margin-bottom: 1rem;
+        font-weight: 600;
+        border-bottom: 2px solid var(--PrimaryColor);
+        padding-bottom: 0.5rem;
+      }
+
+      .paymentForm {
+        .paymentOptions {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1rem;
+
+          @media (max-width: 576px) {
+            flex-direction: column;
+          }
+
+          .paymentOption {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid var(--greyText);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+
+            input {
+              display: none;
+            }
+
+            &.active {
+              border-color: var(--PrimaryColor);
+              background: rgba(25, 130, 196, 0.05);
+              box-shadow: 0 0 0 2px rgba(25, 130, 196, 0.2);
+            }
+
+            span {
+              font-size: 0.95rem;
+              color: var(--blackColor);
+              font-weight: 500;
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+
+              .paymentIcon {
+                font-size: 1.4rem;
+                color: var(--PrimaryColor);
+              }
+            }
+          }
+        }
+
+        .mpesaDetails, .cardDetails {
+          margin-bottom: 1rem;
+
+          .formGroup {
+            margin-bottom: 1rem;
+
+            label {
+              font-size: 0.9rem;
+              color: var(--blackColor);
+              font-weight: 500;
+              margin-bottom: 0.4rem;
+            }
+
+            .inputWithIcon {
+              position: relative;
+              display: flex;
+              align-items: center;
+
+              .inputIcon {
+                position: absolute;
+                left: 0.8rem;
+                font-size: 1.2rem;
+                color: var(--PrimaryColor);
+              }
+
+              input {
+                padding-left: 2.5rem;
+              }
+
+              input:focus + .inputIcon {
+                color: var(--SecondaryColor);
+              }
+            }
+
+            input {
+              width: 100%;
+              padding: 0.8rem;
+              border: 1px solid var(--greyText);
+              border-radius: 6px;
+              font-size: 0.9rem;
+              transition: var(--transition);
+
+              &:focus {
+                outline: none;
+                border-color: var(--PrimaryColor);
+                box-shadow: 0 0 0 2px rgba(25, 130, 196, 0.2);
+              }
+            }
+
+            .note {
+              font-size: 0.85rem;
+              color: var(--textColor);
+              margin-top: 0.4rem;
+              line-height: 1.4;
+            }
+          }
+        }
+
+        .cardDetails {
+          .formRow {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+
+            @media (max-width: 576px) {
+              grid-template-columns: 1fr;
+            }
+          }
+        }
+
+        .payBtn {
+          width: 100%;
+          padding: 0.8rem;
+          background: var(--PrimaryColor);
+          color: var(--whiteColor);
+          border: none;
+          border-radius: 25px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: var(--transition);
+          box-shadow: var(--shadowSm);
+
+          &:hover:not(:disabled) {
+            background: var(--SecondaryColor);
+            transform: translateY(-2px);
+            box-shadow: var(--shadowMd);
+          }
+
+          &:disabled {
+            background: var(--greyText);
+            cursor: not-allowed;
+            opacity: 0.6;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .summary {
+    padding: 5rem 1rem 3rem;
+
+    .bookingsList {
+      .bookingItem {
+        grid-template-columns: 1fr;
+
+        .itemImage {
+          img {
+            height: 200px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .summary {
+    padding: 5rem 0.5rem 3rem;
+
+    .secTitle {
+      .title {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    .bookingsList {
+      .bookingItem {
+        padding: 1rem;
+
+        .itemDetails {
+          .itemActions {
+            flex-direction: column;
+
+            .editBtn, .removeBtn {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+
+    .totalAmount {
+      padding: 1rem;
+    }
+
+    .paymentSection {
+      .summaryCard {
+        padding: 1rem;
+      }
+    }
+  }
+}

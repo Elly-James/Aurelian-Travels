@@ -1,0 +1,286 @@
+:root {
+    --PrimaryColor: hsl(199, 100%, 33%);
+    --SecondaryColor: hsl(187, 85%, 43%);
+    --gradientColor: linear-gradient(to right, hsl(187, 85%, 43%), hsl(199, 100%, 33%));
+    --whiteColor: hsl(0, 0%, 100%);
+    --blackColor: hsl(201, 33%, 16%);
+    --textColor: hsl(240, 4%, 36%);
+    --whiteColorDeam: hsl(0, 0%, 93%);
+    --greyText: rgb(190, 190, 190);
+    --inputColor: rgb(239, 239, 239);
+    --bodyColor: rgb(240, 240, 246);
+    --cardBG: rgb(225, 225, 235);
+    --cardHover: rgb(255, 255, 255);
+    --inCartColor: hsl(199, 70%, 50%);
+    --starColor: hsl(43, 100%, 50%);
+    --starEmptyColor: hsl(0, 0%, 80%);
+    --typeBadge: hsl(199, 100%, 33%, 0.8);
+}
+
+.main {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+    
+    .secTitle {
+        text-align: center;
+        margin-bottom: 2rem;
+        
+        .title {
+            position: relative;
+            display: inline-block;
+            color: var(--blackColor);
+            font-size: 1.8rem;
+            font-weight: 600;
+            
+            &::after {
+                position: absolute;
+                content: '';
+                background: var(--SecondaryColor);
+                height: 5px;
+                width: 120px;
+                left: 50%;
+                transform: translateX(-50%);
+                bottom: -8px;
+                border-radius: 10px;
+            }
+        }
+        
+        .subtitle {
+            color: var(--textColor);
+            margin-top: 1rem;
+            font-size: 1rem;
+        }
+    }
+    
+    .secContent {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        justify-content: center;
+        
+        .singleDestination {
+            height: 100%;
+            display: grid;
+            row-gap: 10px;
+            border-radius: 10px;
+            align-items: center;
+            background: var(--cardBG);
+            box-shadow: 0 2px 4px rgba(140, 140, 141, 0.549);
+            overflow: hidden;
+            transition: 0.3s ease;
+            position: relative;
+            
+            &:hover {
+                background: var(--cardHover);
+                box-shadow: 1px 4px 4px rgba(85, 85, 114, 0.549);
+                transform: translateY(-5px);
+            }
+            
+            .imageDiv {
+                height: 200px;
+                width: 100%;
+                overflow: hidden;
+                position: relative;
+                
+                img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                    transition: 2s ease;
+                }
+                
+                .destinationType {
+                    position: absolute;
+                    bottom: 10px;
+                    left: 10px;
+                    background: var(--typeBadge);
+                    color: white;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 0.8rem;
+                    font-weight: 500;
+                    text-transform: capitalize;
+                }
+            }
+            
+            &:hover img {
+                transform: scale(1.1);
+            }
+            
+            .cardInfo {
+                padding: 1.5rem;
+                
+                .destTitle {
+                    color: var(--blackColor);
+                    font-size: 1.25rem;
+                    font-weight: 600;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .continent {
+                    gap: .5rem;
+                    margin-bottom: 1rem;
+                    
+                    .icon {
+                        color: var(--PrimaryColor);
+                        font-size: 18px;
+                    }
+                    
+                    .name {
+                        color: var(--textColor);
+                        font-weight: 500;
+                        font-size: 14px;
+                    }
+                }
+
+                .rating-section {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 0.5rem;
+                    
+                    .star-rating {
+                        display: flex;
+                        margin-right: 0.5rem;
+                        
+                        .star {
+                            color: var(--starEmptyColor);
+                            font-size: 1rem;
+                            margin-right: 2px;
+                            
+                            &.filled {
+                                color: var(--starColor);
+                            }
+                        }
+                    }
+                    
+                    .review-count {
+                        font-size: 0.8rem;
+                        color: var(--textColor);
+                    }
+                }
+                
+                .fees {
+                    width: 100%;
+                    justify-content: space-between;
+                    padding: 0.5rem 0;
+                    margin: 1rem 0;
+                    border-top: 1.5px solid var(--greyText);
+                    border-bottom: 1.5px solid var(--greyText);
+                    
+                    .price {
+                        font-size: 1.5rem;
+                        font-weight: 600;
+                        color: var(--blackColor);
+                    }
+                }
+                
+                .desc {
+                    font-size: 13.5px;
+                    color: var(--textColor);
+                    font-weight: 400;
+                    margin-bottom: 1rem;
+                    height: 80px;
+                    overflow: hidden;
+                    line-height: 1.5;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 4;
+                    -webkit-box-orient: vertical;
+                }
+                
+                .btn {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 0.5rem;
+                    padding: 0.6rem 1.5rem;
+                    background: var(--PrimaryColor);
+                    color: var(--whiteColor);
+                    font-weight: 600;
+                    border: none;
+                    border-radius: 3rem;
+                    cursor: pointer;
+                    transition: 0.3s ease;
+                    width: 100%;
+                    
+                    &:hover:not(:disabled) {
+                        background: var(--SecondaryColor);
+                    }
+
+                    &:disabled {
+                        background: var(--inCartColor);
+                        cursor: not-allowed;
+                        opacity: 0.9;
+                    }
+                    
+                    .icon {
+                        font-size: 18px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .main {
+        .secContent {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .main {
+        .secContent {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+}
+
+
+// Add these new styles to your existing main.scss
+.rating-value {
+    font-weight: bold;
+    margin-right: 0.5rem;
+    color: var(--blackColor);
+}
+
+.destinationType {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.rating-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    
+    .star-rating {
+        display: flex;
+        margin-right: 0.5rem;
+        
+        .star {
+            color: var(--starEmptyColor);
+            font-size: 1rem;
+            margin-right: 2px;
+            
+            &.filled {
+                color: var(--starColor);
+            }
+        }
+    }
+    
+    .review-count {
+        font-size: 0.8rem;
+        color: var(--textColor);
+    }
+}

@@ -1,0 +1,536 @@
+:root {
+  --PrimaryColor: hsl(199, 100%, 33%);
+  --SecondaryColor: hsl(187, 85%, 43%);
+  --gradientColor: linear-gradient(to right, hsl(187, 85%, 43%), hsl(199, 100%, 33%));
+  --whiteColor: hsl(0, 0%, 100%);
+  --blackColor: hsl(201, 33%, 16%);
+  --textColor: hsl(240, 4%, 36%);
+  --whiteColorDeam: hsl(0, 0%, 93%);
+  --greyText: rgb(190, 190, 190);
+  --inputColor: rgb(239, 239, 239);
+  --bodyColor: rgb(240, 240, 246);
+  --cardBG: rgb(225, 225, 235);
+  --cardHover: rgb(255, 255, 255);
+  --inCartColor: var(--PrimaryColor);
+  --starColor: hsl(43, 100%, 50%);
+  --starEmptyColor: hsl(0, 0%, 80%);
+  --typeBadge: hsl(199, 100%, 33%, 0.8);
+  --scrollButtonOffset: 20px;
+  --dotColor: hsl(0, 0%, 70%);
+  --dotActiveColor: var(--PrimaryColor);
+}
+
+.kenyanHolidays {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 6rem 1rem 2rem;
+
+  .secTitle {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    .title {
+      position: relative;
+      display: inline-block;
+      color: var(--blackColor);
+      font-size: 2rem;
+      font-weight: 600;
+
+      &::after {
+        position: absolute;
+        content: '';
+        background: var(--SecondaryColor);
+        height: 5px;
+        width: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -8px;
+        border-radius: 10px;
+      }
+    }
+
+    .subtitle {
+      color: var(--blackColor);
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      padding-left: 1rem;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        width: 50px;
+        height: 3px;
+        background: var(--PrimaryColor);
+        border-radius: 3px;
+      }
+    }
+  }
+
+  .destinationsContainer, .packagesContainer {
+    position: relative;
+    margin-bottom: 3rem;
+    padding: 0 calc(var(--scrollButtonOffset) + 10px);
+
+    .scrollControls {
+      display: flex;
+      align-items: center;
+      position: relative;
+      width: 100%;
+
+      .scrollButton {
+        background: var(--PrimaryColor);
+        color: var(--whiteColor);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.3s ease;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+        &:hover:not(:disabled) {
+          background: var(--SecondaryColor);
+          transform: translateY(-50%) scale(1.1);
+        }
+
+        &:disabled {
+          background: var(--greyText);
+          cursor: not-allowed;
+          opacity: 0.5;
+          box-shadow: none;
+        }
+
+        &.left {
+          left: calc(-1 * var(--scrollButtonOffset));
+        }
+
+        &.right {
+          right: calc(-1 * var(--scrollButtonOffset));
+        }
+
+        .icon {
+          font-size: 1.2rem;
+        }
+      }
+
+      .carouselWrapper {
+        width: 100%;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        scroll-snap-type: x mandatory;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+
+      .destinationsGrid, .packagesGrid {
+        display: flex;
+        gap: 1.5rem;
+        padding: 1rem 0;
+        width: max-content;
+
+        .destinationCard {
+          flex: 0 0 350px;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          border-radius: 10px;
+          background: var(--cardBG);
+          box-shadow: 0 2px 4px rgba(140, 140, 141, 0.549);
+          overflow: hidden;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          scroll-snap-align: start;
+
+          &:hover {
+            background: var(--cardHover);
+            box-shadow: 1px 4px 4px rgba(85, 85, 114, 0.549);
+            transform: translateY(-5px);
+          }
+
+          .imageDiv {
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+
+            img {
+              height: 100%;
+              width: 100%;
+              object-fit: cover;
+              transition: transform 2s ease;
+            }
+          }
+
+          &:hover img {
+            transform: scale(1.1);
+          }
+
+          .cardInfo {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+
+            .destTitle, .packageTitle {
+              color: var(--blackColor);
+              font-size: 1.25rem;
+              font-weight: 600;
+              margin-bottom: 0.5rem;
+            }
+
+            .locations {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+              margin-bottom: 1rem;
+
+              .location {
+                display: flex;
+                align-items: center;
+
+                .icon {
+                  color: var(--PrimaryColor);
+                  font-size: 18px;
+                  margin-right: 0.5rem;
+                }
+
+                span {
+                  color: var(--textColor);
+                  font-weight: 500;
+                  font-size: 14px;
+                }
+              }
+            }
+
+            .rating-section {
+              display: flex;
+              align-items: center;
+              margin-bottom: 0.5rem;
+
+              .star-rating {
+                display: flex;
+                margin-right: 0.5rem;
+
+                .star {
+                  color: var(--starEmptyColor);
+                  font-size: 1rem;
+
+                  &.filled {
+                    color: var(--starColor);
+                  }
+                }
+              }
+
+              .review-count {
+                font-size: 0.8rem;
+                color: var(--textColor);
+              }
+            }
+
+            .duration {
+              color: var(--textColor);
+              font-size: 0.9rem;
+              margin-bottom: 0.5rem;
+            }
+
+            .fees {
+              width: 100%;
+              display: flex;
+              justify-content: space-between;
+              padding: 0.5rem 0;
+              margin: 1rem 0;
+              border-top: 1.5px solid var(--greyText);
+              border-bottom: 1.5px solid var(--greyText);
+
+              .price {
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: var(--blackColor);
+              }
+            }
+
+            .desc {
+              font-size: 13.5px;
+              color: var(--textColor);
+              font-weight: 400;
+              margin-bottom: 1rem;
+              height: 80px;
+              overflow: hidden;
+              line-height: 1.5;
+              display: -webkit-box;
+              -webkit-line-clamp: 4;
+              -webkit-box-orient: vertical;
+            }
+
+            .btn {
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+              gap: 0.5rem;
+              padding: 0.6rem 1.5rem;
+              background: var(--PrimaryColor);
+              color: var(--whiteColor);
+              font-weight: 600;
+              border: none;
+              border-radius: 3rem;
+              cursor: pointer;
+              transition: background-color 0.3s ease;
+              width: 100%;
+              margin-top: auto;
+
+              &:hover:not(:disabled) {
+                background: var(--SecondaryColor);
+              }
+
+              &:disabled {
+                background: var(--inCartColor);
+                cursor: not-allowed;
+                opacity: 0.9;
+              }
+
+              .icon {
+                font-size: 18px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .carouselDots {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 1rem;
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--dotColor);
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+
+        &.active {
+          background: var(--dotActiveColor);
+          transform: scale(1.4);
+        }
+
+        &:hover:not(.active) {
+          background: var(--SecondaryColor);
+          transform: scale(1.2);
+        }
+      }
+    }
+  }
+
+  .suggestionForm {
+    background: var(--cardBG);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 3rem;
+    box-shadow: 0 2px 4px rgba(140, 140, 141, 0.549);
+
+    .formTitle {
+      color: var(--blackColor);
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .formSubtitle {
+      color: var(--textColor);
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .formRow {
+        display: flex;
+        gap: 1rem;
+
+        @media (max-width: 768px) {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+
+      .formGroup {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          color: var(--blackColor);
+          font-weight: 500;
+          font-size: 0.9rem;
+        }
+
+        input, textarea {
+          padding: 0.8rem;
+          border: 1px solid var(--greyText);
+          border-radius: 5px;
+          font-size: 0.9rem;
+          transition: border-color 0.3s ease;
+
+          &:focus {
+            outline: none;
+            border-color: var(--PrimaryColor);
+            box-shadow: 0 0 0 2px rgba(25, 130, 196, 0.2);
+          }
+        }
+
+        textarea {
+          min-height: 100px;
+          resize: vertical;
+        }
+
+        .checkboxContainer {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin-top: 0.5rem;
+
+          input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+          }
+
+          span {
+            color: var(--textColor);
+            font-size: 0.9rem;
+          }
+        }
+      }
+
+      .submitBtn {
+        background: var(--PrimaryColor);
+        color: var(--whiteColor);
+        border: none;
+        border-radius: 3rem;
+        padding: 0.8rem 1.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+        align-self: center;
+
+        &:hover {
+          background: var(--SecondaryColor);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .kenyanHolidays {
+    .destinationsContainer, .packagesContainer {
+      padding: 0 calc(var(--scrollButtonOffset) + 10px);
+
+      .scrollControls {
+        .destinationsGrid, .packagesGrid {
+          .destinationCard {
+            flex: 0 0 300px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .kenyanHolidays {
+    padding: 6rem 0.5rem 2rem;
+    --scrollButtonOffset: 10px;
+
+    .secTitle {
+      .title {
+        font-size: 1.5rem;
+
+        &::after {
+          width: 80px;
+          bottom: -8px;
+        }
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        padding-left: 0.5rem;
+      }
+    }
+
+    .destinationsContainer, .packagesContainer {
+      .scrollControls {
+        .scrollButton {
+          width: 30px;
+          height: 30px;
+
+          .icon {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .carouselDots {
+        .dot {
+          width: 10px;
+          height: 10px;
+
+          &.active {
+            transform: scale(1.3);
+          }
+
+          &:hover:not(.active) {
+            transform: scale(1.1);
+          }
+        }
+      }
+    }
+
+    .suggestionForm {
+      padding: 1.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .kenyanHolidays {
+    --scrollButtonOffset: 5px;
+
+    .destinationsContainer, .packagesContainer {
+      .scrollControls {
+        .destinationsGrid, .packagesGrid {
+          .destinationCard {
+            flex: 0 0 280px;
+          }
+        }
+      }
+    }
+  }
+}

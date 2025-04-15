@@ -1,0 +1,505 @@
+:root {
+  --PrimaryColor: hsl(199, 100%, 33%);
+  --SecondaryColor: hsl(187, 85%, 43%);
+  --SecondaryColorDark: hsl(187, 85%, 33%);
+  --whiteColor: hsl(0, 0%, 100%);
+  --blackColor: hsl(201, 33%, 16%);
+  --textColor: hsl(240, 4%, 36%);
+  --greyText: rgb(190, 190, 190);
+  --inputColor: rgb(239, 239, 239);
+  --bodyColor: rgb(240, 240, 246);
+  --cardBG: rgb(225, 225, 235);
+  --cardHover: rgb(255, 255, 255);
+  --starColor: hsl(43, 100%, 50%);
+  --starEmptyColor: hsl(0, 0%, 80%);
+  --shadowSm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadowMd: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadowLg: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --transition: all 0.3s ease;
+}
+
+.myCart {
+  padding: 6rem 1rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 10rem);
+  background: var(--bodyColor);
+
+  .secTitle {
+    text-align: center;
+    margin-bottom: 3rem;
+
+    .title {
+      font-size: 2.5rem;
+      color: var(--blackColor);
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--PrimaryColor);
+        border-radius: 2px;
+      }
+    }
+
+    .subtitle {
+      color: var(--textColor);
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      font-weight: 400;
+    }
+
+    .error-message {
+      color: var(--SecondaryColorDark);
+      background: var(--cardHover);
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+      box-shadow: var(--shadowSm);
+      font-size: 0.9rem;
+    }
+  }
+
+  .emptyCart {
+    text-align: center;
+    padding: 3rem;
+    background: var(--cardHover);
+    border-radius: 12px;
+    box-shadow: var(--shadowMd);
+    max-width: 600px;
+    margin: 0 auto;
+
+    p {
+      font-size: 1.2rem;
+      color: var(--textColor);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .emptyCartActions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+
+      .btn {
+        padding: 0.8rem 2rem;
+        background: var(--PrimaryColor);
+        color: var(--whiteColor);
+        border-radius: 25px;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: 500;
+        box-shadow: var(--shadowSm);
+        transition: var(--transition);
+
+        &:hover {
+          background: var(--SecondaryColor);
+          transform: translateY(-2px);
+          box-shadow: var(--shadowMd);
+        }
+      }
+    }
+  }
+
+  .cartContent {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .cartItems {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    .cartItem {
+      background: var(--cardHover);
+      border-radius: 12px;
+      box-shadow: var(--shadowMd);
+      padding: 1.5rem;
+      transition: var(--transition);
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadowLg);
+      }
+
+      @media (min-width: 992px) {
+        display: grid;
+        grid-template-columns: 1.5fr 1fr;
+        gap: 2rem;
+      }
+
+      .itemImage {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        img {
+          width: 100%;
+          height: 300px;
+          object-fit: cover;
+          border-radius: 8px;
+          transition: transform 0.5s ease;
+        }
+
+        &:hover img {
+          transform: scale(1.05);
+        }
+
+        .itemInfo {
+          padding: 0 0.5rem;
+
+          h4 {
+            font-size: 1.6rem;
+            color: var(--blackColor);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+          }
+
+          .location {
+            display: flex;
+            align-items: center;
+            color: var(--textColor);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+
+            .icon {
+              color: var(--PrimaryColor);
+              margin-right: 0.5rem;
+              font-size: 1.2rem;
+            }
+          }
+
+          .price {
+            color: var(--PrimaryColor);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+          }
+
+          .description {
+            color: var(--textColor);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 0.5rem 0;
+          }
+
+          .reviews-display {
+            margin-top: 0.5rem;
+
+            .rating-container {
+              display: inline-flex;
+              align-items: center;
+              gap: 0.5rem;
+              padding: 0.4rem 0.8rem;
+              background: var(--cardBG);
+              border-radius: 15px;
+
+              .star-rating {
+                display: flex;
+                gap: 0.2rem;
+
+                .star {
+                  font-size: 1rem;
+
+                  &.filled {
+                    color: var(--starColor);
+                  }
+
+                  &.empty {
+                    color: var(--starEmptyColor);
+                  }
+                }
+              }
+
+              .review-count {
+                font-size: 0.85rem;
+                color: var(--textColor);
+              }
+            }
+          }
+        }
+      }
+
+      .bookingForm {
+        padding: 1rem;
+        background: var(--cardBG);
+        border-radius: 8px;
+        box-shadow: var(--shadowSm);
+
+        h5 {
+          font-size: 1.2rem;
+          color: var(--blackColor);
+          margin-bottom: 1rem;
+          font-weight: 600;
+          border-bottom: 2px solid var(--PrimaryColor);
+          padding-bottom: 0.5rem;
+        }
+
+        form {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .formRow {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+
+          @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+          }
+        }
+
+        .formGroup {
+          display: flex;
+          flex-direction: column;
+
+          label {
+            font-size: 0.9rem;
+            color: var(--blackColor);
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+          }
+
+          input, textarea {
+            padding: 0.8rem;
+            border: 1px solid var(--greyText);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: var(--transition);
+
+            &:focus {
+              outline: none;
+              border-color: var(--PrimaryColor);
+              box-shadow: 0 0 0 2px rgba(25, 130, 196, 0.2);
+            }
+          }
+
+          textarea {
+            min-height: 80px;
+            resize: vertical;
+          }
+        }
+
+        .reviewSection {
+          padding: 1rem 0;
+          border-top: 1px solid var(--greyText);
+
+          h5 {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+          }
+
+          form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+          }
+
+          .star-rating.interactive {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 0.5rem;
+
+            .star {
+              font-size: 1.4rem;
+              color: var(--starEmptyColor);
+              cursor: pointer;
+              transition: var(--transition);
+
+              &.filled {
+                color: var(--starColor);
+              }
+
+              &:hover {
+                transform: scale(1.15);
+              }
+            }
+          }
+
+          .submitReviewBtn {
+            padding: 0.7rem 1.5rem;
+            background: var(--PrimaryColor);
+            color: var(--whiteColor);
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+
+            &:hover:not(:disabled) {
+              background: var(--SecondaryColor);
+              transform: translateY(-2px);
+            }
+
+            &:disabled {
+              background: var(--greyText);
+              cursor: not-allowed;
+              opacity: 0.6;
+            }
+          }
+        }
+
+        .itemActions {
+          display: flex;
+          gap: 1rem;
+          margin-top: 1rem;
+
+          .btn {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+
+            &.removeBtn {
+              background: var(--SecondaryColorDark);
+              color: var(--whiteColor);
+
+              &:hover:not(:disabled) {
+                background: var(--SecondaryColor);
+                transform: translateY(-2px);
+              }
+            }
+
+            &.bookBtn {
+              background: var(--PrimaryColor);
+              color: var(--whiteColor);
+
+              &:hover:not(:disabled) {
+                background: var(--SecondaryColor);
+                transform: translateY(-2px);
+              }
+
+              &.inactive, &:disabled {
+                background: var(--greyText);
+                cursor: not-allowed;
+                opacity: 0.6;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .proceedToSummary {
+    text-align: center;
+    padding: 1rem;
+    margin: 2rem 0;
+
+    .proceedBtn {
+      padding: 1rem 2.5rem;
+      background: var(--PrimaryColor);
+      color: var(--whiteColor);
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: var(--shadowSm);
+      max-width: 300px;
+      width: 100%;
+
+      &:hover:not(:disabled) {
+        background: var(--SecondaryColor);
+        transform: translateY(-2px);
+        box-shadow: var(--shadowMd);
+      }
+
+      &:disabled {
+        background: var(--greyText);
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .myCart {
+    padding: 5rem 1rem 3rem;
+
+    .cartItems {
+      .cartItem {
+        grid-template-columns: 1fr;
+
+        .itemImage {
+          img {
+            height: 250px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .myCart {
+    padding: 5rem 0.5rem 3rem;
+
+    .secTitle {
+      .title {
+        font-size: 2rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+    }
+
+    .cartItems {
+      .cartItem {
+        padding: 1rem;
+
+        .itemImage {
+          img {
+            height: 200px;
+          }
+
+          .itemInfo {
+            h4 {
+              font-size: 1.4rem;
+            }
+
+            .price {
+              font-size: 1.2rem;
+            }
+          }
+        }
+
+        .bookingForm {
+          .itemActions {
+            flex-direction: column;
+          }
+        }
+      }
+    }
+
+    .proceedToSummary {
+      .proceedBtn {
+        padding: 0.8rem 1.5rem;
+      }
+    }
+  }
+}
