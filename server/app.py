@@ -30,7 +30,25 @@ def create_app():
     
     db.init_app(app)
     migrate.init_app(app, db)
-    cors.init_app(app, resources={r"/api/*": {"origins": os.getenv('FRONTEND_URL', 'http://localhost:3000')}})
+  # Updated CORS configuration
+    cors = CORS()
+    cors.init_app(app, resources={
+        r"/api/*": {
+            "origins": [
+                os.getenv('FRONTEND_URL', 'http://localhost:3000'),
+                "https://aurelian-travels-frontend.onrender.com"  # Your live frontend URL
+            ],
+            "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            "allow_headers": [
+                "Content-Type",
+                "Authorization",
+                "X-Requested-With",
+                "Access-Control-Allow-Origin"
+            ],
+            "supports_credentials": True,
+            "max_age": 86400
+        }
+    })
     jwt.init_app(app)
     bcrypt.init_app(app)
 
