@@ -1,6 +1,9 @@
 # Aurelian Travels
 
-Aurelian Travels is a full-stack web application that allows users to explore, suggest, and book travel destinations in Kenya and internationally. Users can browse single destinations and holiday packages, submit suggestions for new destinations, leave reviews, and manage bookings. The application is built with a Flask API backend and a React frontend, providing a seamless user experience for travel enthusiasts.
+Aurelian Travels is a full-stack web application that allows users to explore, suggest, and book travel destinations in Kenya and internationally. 
+Users can browse single destinations and holiday packages, submit suggestions for new destinations, leave reviews, and manage bookings. 
+
+The application is built with a Flask API backend and a React frontend, providing a seamless user experience for travel enthusiasts.
 
 ## Table of Contents
 - [Aurelian Travels](#aurelian-travels)
