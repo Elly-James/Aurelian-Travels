@@ -7,7 +7,7 @@ import {AiOutlineInstagram} from 'react-icons/ai';
 import {FaTripadvisor} from 'react-icons/fa';
 import {BsListTask} from 'react-icons/bs';
 import {TbApps} from 'react-icons/tb';
-import video from '../../Assets/video.mp4';
+import video from 'client/src/Assets/video.mp4';
 import Main from '../Main/Main';
 import { useCart } from '../context/CartContext';
 import { destinationsApi } from '../../utils/api';
