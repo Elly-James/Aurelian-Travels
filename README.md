@@ -1,6 +1,7 @@
 # Aurelian Travels
 
 Aurelian Travels is a full-stack web application that allows users to explore, suggest, and book travel destinations in Kenya and internationally. 
+
 Users can browse single destinations and holiday packages, submit suggestions for new destinations, leave reviews, and manage bookings. 
 
 The application is built with a Flask API backend and a React frontend, providing a seamless user experience for travel enthusiasts.
@@ -202,8 +203,8 @@ Git
 * Edith Gatwiri  <edithgatwiri70@gmail.com>
 * Elly James    <ellykomunga@gmail.com>
 * Helen Wairagu  <hwangari3@gmail.com>
-* Ian Gathua
-* Edwin Ngigi
+* Ian Gathua    <gathuambui@gmail.com>
+* Edwin Ngigi <edwinngigi313@gmail.com>
 
 Incase you are stuck or experiencing any error, reach out to us via our respective emails
 
