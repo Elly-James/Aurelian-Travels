@@ -90,7 +90,7 @@ const InternationalHolidays = () => {
     if (!container) return;
 
     const cardWidth = container.querySelector('.destinationCard')?.offsetWidth || 350;
-    const { scrollLeft, scrollWidth, clientWidth } = container;
+  
     const maxScroll = Math.max(0, (itemCount - 3) * cardWidth);
 
     setButtons({
