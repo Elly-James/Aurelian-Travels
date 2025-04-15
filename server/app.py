@@ -213,6 +213,7 @@ def create_app():
                 "error": "Failed to process Google login",
                 "details": str(e)
             }), 500
+
     @app.route('/api/auth/logout', methods=['POST'])
     @jwt_required()
     def logout():
@@ -338,6 +339,59 @@ def create_app():
 
         destinations = query.all()
         return jsonify([d.to_dict() for d in destinations])
+
+    @app.route('/api/destinations/suggest', methods=['POST'])
+    def suggest_destination():
+        from models import DestinationSuggestion, Destination, User
+        data = request.get_json()
+        
+        # Validate required fields
+        required_fields = ['title', 'location', 'description', 'fees', 'type', 'is_package']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({"error": f"Missing required field: {field}"}), 400
+
+        # Validate type
+        if data['type'] not in ['kenyan', 'international']:
+            return jsonify({"error": "Type must be 'kenyan' or 'international'"}), 400
+
+        # Get user_id if authenticated
+        user_id = None
+        try:
+            user_id = get_jwt_identity()
+        except:
+            pass  # User may not be authenticated
+
+        # Create a new destination suggestion
+        suggestion = DestinationSuggestion(
+            user_id=user_id,
+            title=data['title'],
+            location=data['location'],
+            description=data['description'],
+            image_url=data.get('image_url', 'https://via.placeholder.com/300'),  # Default image if none provided
+            fees=float(data['fees']),
+            type=data['type'],
+            is_package=data['is_package'],
+            duration=data.get('duration', '')
+        )
+        
+        # Add to destinations table so it appears immediately
+        destination = Destination(
+            title=data['title'],
+            location=data['location'],
+            description=data['description'],
+            image_url=data.get('image_url', 'https://via.placeholder.com/300'),
+            fees=float(data['fees']),
+            type=data['type'],
+            is_package=data['is_package'],
+            duration=data.get('duration', '')
+        )
+
+        db.session.add(suggestion)
+        db.session.add(destination)
+        db.session.commit()
+        
+        return jsonify(destination.to_dict()), 201
 
     @app.route('/api/destinations/<int:destination_id>/reviews', methods=['POST'])
     @jwt_required()

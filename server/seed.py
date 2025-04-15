@@ -1,6 +1,5 @@
-# seed.py
-from app import create_app, db  # Import db from app.py
-from models import User, Destination, Review, Booking
+from app import create_app, db
+from models import User, Destination, Review, Booking, DestinationSuggestion
 from datetime import datetime, timedelta
 import random
 
@@ -10,6 +9,7 @@ def seed_database():
     with app.app_context():
         # Clear existing data
         print("Clearing existing data...")
+        db.session.query(DestinationSuggestion).delete()
         db.session.query(Review).delete()
         db.session.query(Booking).delete()
         db.session.query(Destination).delete()
@@ -32,7 +32,7 @@ def seed_database():
             )
         ]
         for user in users:
-            user.set_password("password123")  # Set a default password for each user
+            user.set_password("password123")
         db.session.add_all(users)
         
         # Kenyan destinations
@@ -46,7 +46,6 @@ def seed_database():
                 type="kenyan",
                 is_package=False
             ),
-
             Destination(
                 title="Diani Beach",
                 location="Kwale County",
@@ -56,7 +55,6 @@ def seed_database():
                 type="kenyan",
                 is_package=False
             ),
-
             Destination(
                 title="Amboseli National Park",
                 location="Kajiado County",
@@ -66,7 +64,6 @@ def seed_database():
                 type="kenyan",
                 is_package=False
             ),
-
             Destination(
                 title="Lamu Island",
                 location="Lamu County",
@@ -76,7 +73,6 @@ def seed_database():
                 type="kenyan",
                 is_package=False
             ),
-
             Destination(
                 title="Hell's Gate National Park",
                 location="Nakuru County",
@@ -87,41 +83,37 @@ def seed_database():
                 is_package=False
             ),
             Destination(
-            title="Lake Nakuru National Park",
-            location="Nakuru County",
-            description="Famous for its flamingo populations that turn the lake shores pink. The park also hosts rhinos, lions, and leopards against a scenic backdrop of the Great Rift Valley. Excellent for birdwatchers with over 400 species recorded.",
-            image_url="https://www.aberdarenationalparks.com/wp-content/uploads/2023/03/lake-nakuru-national-park-750x400.jpg",
-            fees=850,
-            type="kenyan",
-            is_package=False
-        ),
-        Destination(
-            title="Mount Kenya",
-            location="Central Kenya",
-            description="Africa's second highest peak offering spectacular trekking routes through diverse ecological zones. The mountain's glaciers and snow-capped peaks create stunning vistas, while lower slopes feature dense forests rich in wildlife. Ideal for both experienced climbers and casual hikers.",
-            image_url="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/b9/18/38/caption.jpg?w=500&h=500&s=1",
-            fees=700,
-            type="kenyan",
-            is_package=False
-        ),
-        Destination(
-            title="Watamu Marine Park",
-            location="Coast Province",
-            description="Pristine marine protected area with spectacular coral reefs perfect for snorkeling and diving. The park hosts sea turtles, tropical fish, and dolphins in its crystal-clear waters. Nearby, you can explore the mysterious Gede Ruins, a 12th-century Swahili village.",
-            image_url="https://africanspicesafaris.com/wp-content/uploads/2024/05/wamamu-marine-national-park-reserve-snorkeling-and-scuba-diving.gif",
-            fees=650,
-            type="kenyan",
-            is_package=False
-        )
-            
+                title="Lake Nakuru National Park",
+                location="Nakuru County",
+                description="Famous for its flamingo populations that turn the lake shores pink. The park also hosts rhinos, lions, and leopards against a scenic backdrop of the Great Rift Valley. Excellent for birdwatchers with over 400 species recorded.",
+                image_url="https://www.aberdarenationalparks.com/wp-content/uploads/2023/03/lake-nakuru-national-park-750x400.jpg",
+                fees=850,
+                type="kenyan",
+                is_package=False
+            ),
+            Destination(
+                title="Mount Kenya",
+                location="Central Kenya",
+                description="Africa's second highest peak offering spectacular trekking routes through diverse ecological zones. The mountain's glaciers and snow-capped peaks create stunning vistas, while lower slopes feature dense forests rich in wildlife. Ideal for both experienced climbers and casual hikers.",
+                image_url="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/b9/18/38/caption.jpg?w=500&h=500&s=1",
+                fees=700,
+                type="kenyan",
+                is_package=False
+            ),
+            Destination(
+                title="Watamu Marine Park",
+                location="Coast Province",
+                description="Pristine marine protected area with spectacular coral reefs perfect for snorkeling and diving. The park hosts sea turtles, tropical fish, and dolphins in its crystal-clear waters. Nearby, you can explore the mysterious Gede Ruins, a 12th-century Swahili village.",
+                image_url="https://africanspicesafaris.com/wp-content/uploads/2024/05/wamamu-marine-national-park-reserve-snorkeling-and-scuba-diving.gif",
+                fees=650,
+                type="kenyan",
+                is_package=False
+            )
         ]
-        
         
         # International destinations
         international_destinations = [
-
-            # Single Destinations
-           Destination(
+            Destination(
                 title="Bali",
                 location="Indonesia",
                 description="Tropical paradise known for its volcanic mountains, emerald rice terraces, and world-class surfing beaches. Rich Hindu culture shines through thousands of temples, colorful ceremonies, and traditional dance performances. Stay in luxurious jungle villas or beachfront resorts with breathtaking ocean views.",
@@ -130,7 +122,6 @@ def seed_database():
                 type="international",
                 is_package=False
             ),
-
             Destination(
                 title="Paris",
                 location="France",
@@ -140,7 +131,6 @@ def seed_database():
                 type="international",
                 is_package=False
             ),
-
             Destination(
                 title="Santorini",
                 location="Greece",
@@ -150,7 +140,6 @@ def seed_database():
                 type="international",
                 is_package=False
             ),
-
             Destination(
                 title="Kyoto",
                 location="Japan",
@@ -160,13 +149,11 @@ def seed_database():
                 type="international",
                 is_package=False
             ),
-
             Destination(
                 title="Cape Town",
                 location="South Africa",
                 description="Stunning coastal city framed by Table Mountain and surrounded by pristine beaches and vineyards. Take the cable car up Table Mountain for panoramic views or visit penguins at Boulders Beach. The nearby Cape Winelands offer world-class wines paired with gourmet cuisine in picturesque valley settings.",
                 image_url="https://www.tripsavvy.com/thmb/ax9dykj68rl4XE6YZTwY85lhBo0=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/aerial-view-of-cape-town-and-it-s-majestic--flat-topped-table-mountain-1169318257-07b81b2f33d74f6aaf1685b306c86bfa.jpg",
-               
                 fees=1600,
                 type="international",
                 is_package=False
@@ -202,9 +189,7 @@ def seed_database():
         
         # Packages for kenya and international
         packages = [
-
-               # Kenyan packages
-
+            # Kenyan packages
             Destination(
                 title="Kenya Safari Adventure",
                 location="Maasai Mara, Lake Nakuru, Amboseli",
@@ -215,7 +200,6 @@ def seed_database():
                 is_package=True,
                 duration="7 days, 6 nights"
             ),
-
             Destination(
                 title="Classic Kenya Safari",
                 location="Maasai Mara, Lake Nakuru, Amboseli",
@@ -226,7 +210,6 @@ def seed_database():
                 is_package=True,
                 duration="7 days, 6 nights"
             ),
-
             Destination(
                 title="Beach & Bush Adventure",
                 location="Diani Beach, Tsavo East",
@@ -237,7 +220,6 @@ def seed_database():
                 is_package=True,
                 duration="5 days, 4 nights"
             ),
-
             Destination(
                 title="Northern Kenya Explorer",
                 location="Samburu, Shaba, Buffalo Springs",
@@ -278,12 +260,8 @@ def seed_database():
                 is_package=True,
                 duration="5 days, 4 nights"
             ),
-
-
-
             # International Packages 
-            
-           Destination(
+            Destination(
                 title="European Tour",
                 location="Paris, Rome, Barcelona",
                 description="14-day cultural journey through Europe's most enchanting cities with skip-the-line access to major landmarks. From the Eiffel Tower to the Colosseum and Sagrada Familia, experience the best art, architecture and cuisine. Includes wine tasting in Tuscany, gondola rides in Venice, and flamenco shows in Barcelona.",
@@ -293,7 +271,6 @@ def seed_database():
                 is_package=True,
                 duration="14 days, 13 nights"
             ),
-
             Destination(
                 title="European Highlights Tour",
                 location="Paris, Rome, Barcelona",
@@ -304,7 +281,6 @@ def seed_database():
                 is_package=True,
                 duration="14 days, 13 nights"
             ),
-
             Destination(
                 title="Southeast Asia Adventure",
                 location="Bali, Bangkok, Singapore",
@@ -315,7 +291,6 @@ def seed_database():
                 is_package=True,
                 duration="10 days, 9 nights"
             ),
-
             Destination(
                 title="Dubai Luxury Escape",
                 location="Dubai, Abu Dhabi",
@@ -356,8 +331,6 @@ def seed_database():
                 is_package=True,
                 duration="14 days, 13 nights"
             )
-
-           
         ]
         
         db.session.add_all(kenyan_destinations)

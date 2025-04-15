@@ -54,6 +54,36 @@ class Destination(db.Model):
             'duration': self.duration
         }
 
+class DestinationSuggestion(db.Model):
+    __tablename__ = 'destination_suggestions'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Optional, for authenticated users
+    title = db.Column(db.String(150), nullable=False)
+    location = db.Column(db.String(150), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.String(1000))
+    fees = db.Column(db.Float, nullable=False)
+    type = db.Column(db.String(20), nullable=False)  # 'kenyan' or 'international'
+    is_package = db.Column(db.Boolean, default=False)
+    duration = db.Column(db.String(100))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'title': self.title,
+            'location': self.location,
+            'description': self.description,
+            'image_url': self.image_url,
+            'fees': self.fees,
+            'type': self.type,
+            'is_package': self.is_package,
+            'duration': self.duration,
+            'created_at': self.created_at.isoformat()
+        }
+
 class Booking(db.Model):
     __tablename__ = 'bookings'
     
