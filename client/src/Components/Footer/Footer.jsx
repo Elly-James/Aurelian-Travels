@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './footer.scss';
-import video from '../../Assets/video.mp4';
+import video from 'client/src/Assets/video.mp4';
 import { FiSend } from 'react-icons/fi';
 import { MdOutlineTravelExplore } from 'react-icons/md';
 import { AiOutlineTwitter, AiFillYoutube, AiFillInstagram } from 'react-icons/ai';
