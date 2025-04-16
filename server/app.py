@@ -535,25 +535,19 @@ def create_app():
         
         return jsonify({"message": "Booking cancelled successfully"}), 200
 
-    return app
-
-
-with app.app_context():
-    db.create_all()
-    print("✔️ Database tables created")
     
-    # Optional: Add test data if needed
-    if not Destination.query.first():
-        from seed import seed_database
-        seed_database()
-        print("✔️ Sample data seeded")
+    with app.app_context():
+        db.create_all()
+        print("✔️ Database tables created")
+        
+        if not Destination.query.first():
+            from seed import seed_database
+            seed_database()
+            print("✔️ Sample data seeded")
 
+    return app
 
 app = create_app()
 
-
-
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+    app.run()

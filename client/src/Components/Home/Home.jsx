@@ -7,7 +7,7 @@ import {AiOutlineInstagram} from 'react-icons/ai';
 import {FaTripadvisor} from 'react-icons/fa';
 import {BsListTask} from 'react-icons/bs';
 import {TbApps} from 'react-icons/tb';
-import video from 'client/src/Assets/video.mp4';
+
 import Main from '../Main/Main';
 import { useCart } from '../context/CartContext';
 import { destinationsApi } from '../../utils/api';
@@ -85,8 +85,14 @@ const Home = () => {
         <>
             <section className='home'>
                 <div className='overlay'></div>
-                <video src={video} muted autoPlay loop type="video/mp4"></video>
-                
+                    <video 
+                        src="https://cdn.pixabay.com/video/2019/04/23/23011-332483109_tiny.mp4" 
+                        muted 
+                        autoPlay 
+                        loop 
+                        type="video/mp4">
+                    </video>
+                            
                 <div className="homeContent container">
                     <div className="textDiv">
                         <span className="smallText">

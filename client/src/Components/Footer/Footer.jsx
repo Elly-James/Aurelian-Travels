@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './footer.scss';
-import video from 'client/src/Assets/video.mp4';
+
 import { FiSend } from 'react-icons/fi';
 import { MdOutlineTravelExplore } from 'react-icons/md';
 import { AiOutlineTwitter, AiFillYoutube, AiFillInstagram } from 'react-icons/ai';
@@ -28,7 +28,14 @@ const Footer = () => {
   return (
     <section className="footer">
       <div className="videoDiv">
-        <video src={video} loop autoPlay muted type="video/mp4"></video>
+        <video 
+            src="https://cdn.pixabay.com/video/2019/04/23/23011-332483109_tiny.mp4" 
+            muted 
+            autoPlay 
+            loop 
+            type="video/mp4">
+        </video>
+
       </div>
 
       <div className="secContent container">
