@@ -503,9 +503,10 @@ def create_app():
 
     # Create database tables on startup
     with app.app_context():
+        # Import all models to ensure they are registered with SQLAlchemy
+        from models import User, Destination, DestinationSuggestion, Review, Booking
         db.create_all()
         print("✔️ Database tables created")
-        # Add this to log the existing tables
         inspector = db.inspect(db.engine)
         tables = inspector.get_table_names()
         print(f"Tables in database after db.create_all(): {tables}")
