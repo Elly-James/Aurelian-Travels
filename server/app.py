@@ -1,8 +1,7 @@
 import os
 
 from flask_cors import CORS  # Must import this
-
-    
+from models import db, User, Destination, Booking, Review
    
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta
@@ -538,7 +537,21 @@ def create_app():
 
     return app
 
+
+with app.app_context():
+    db.create_all()
+    print("✔️ Database tables created")
+    
+    # Optional: Add test data if needed
+    if not Destination.query.first():
+        from seed import seed_database
+        seed_database()
+        print("✔️ Sample data seeded")
+
+
 app = create_app()
+
+
 
 if __name__ == '__main__':
     with app.app_context():
