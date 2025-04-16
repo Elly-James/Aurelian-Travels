@@ -64,6 +64,11 @@ def create_app():
     def index():
         return jsonify({"message": "Welcome to the Aurelian Travels API! Use /api endpoints to interact with the API."})
 
+    # Temporary test endpoint to confirm deployment
+    @app.route('/api/test', methods=['GET'])
+    def test_endpoint():
+        return jsonify({"message": "Test endpoint is working! This confirms the latest app.py is deployed."})
+
     # AUTHENTICATION ROUTES
     @app.route('/api/auth/register', methods=['POST'])
     def register():
