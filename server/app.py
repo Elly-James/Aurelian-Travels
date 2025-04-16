@@ -69,6 +69,11 @@ def create_app():
     def test_endpoint():
         return jsonify({"message": "Test endpoint is working! This confirms the latest app.py is deployed."})
 
+    # Debug endpoint to confirm the version of app.py
+    @app.route('/api/debug', methods=['GET'])
+    def debug_endpoint():
+        return jsonify({"message": "This is app.py version with /api/test and /api/seed endpoints"})
+
     # AUTHENTICATION ROUTES
     @app.route('/api/auth/register', methods=['POST'])
     def register():
@@ -503,10 +508,22 @@ def create_app():
 
     # Create database tables on startup
     with app.app_context():
+        # Test database connection
+        try:
+            db.engine.connect()
+            print("✔️ Successfully connected to the database")
+        except Exception as e:
+            print(f"❌ Failed to connect to the database: {str(e)}")
+            raise e  # Raise the exception to fail the deployment and log the error
+
         # Import all models to ensure they are registered with SQLAlchemy
         from models import User, Destination, DestinationSuggestion, Review, Booking
-        db.create_all()
-        print("✔️ Database tables created")
+        try:
+            db.create_all()
+            print("✔️ Database tables created")
+        except Exception as e:
+            print(f"❌ Failed to create database tables: {str(e)}")
+
         inspector = db.inspect(db.engine)
         tables = inspector.get_table_names()
         print(f"Tables in database after db.create_all(): {tables}")
