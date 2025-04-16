@@ -1,8 +1,4 @@
 import os
-
-from flask_cors import CORS  # Must import this
-from models import db, User, Destination, Booking, Review
-   
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -13,7 +9,8 @@ from flask_jwt_extended import (
     create_refresh_token,
     get_jwt
 )
-from extensions import db, migrate, cors, jwt, bcrypt
+from flask_cors import CORS
+from extensions import db, migrate, jwt, bcrypt
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 import requests
@@ -21,43 +18,39 @@ import requests
 def create_app():
     app = Flask(__name__)
 
-     # Initialize CORS first
-    cors = CORS(app)  
-    
+    # Load environment variables
     load_dotenv()
-    
+
+    # App configurations
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL').replace('postgres://', 'postgresql://')
+    # Use RENDER_DATABASE_URL if available (on Render), otherwise fall back to DATABASE_URL (local)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('RENDER_DATABASE_URL') or os.getenv('DATABASE_URL', 'sqlite:///app.db').replace('postgres://', 'postgresql://')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
     app.config['JWT_BLACKLIST_ENABLED'] = True
     app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
-    
+
+    # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
-  # Updated CORS configuration
-    cors = CORS()
-    cors.init_app(app, resources={
+    jwt.init_app(app)
+    bcrypt.init_app(app)
+
+    # Configure CORS
+    CORS(app, resources={
         r"/api/*": {
             "origins": [
                 os.getenv('FRONTEND_URL', 'http://localhost:3000'),
-                "https://aurelian-travels-frontend.onrender.com"  # Your live frontend URL
+                "https://aurelian-travels-frontend.onrender.com"
             ],
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            "allow_headers": [
-                "Content-Type",
-                "Authorization",
-                "X-Requested-With",
-                "Access-Control-Allow-Origin"
-            ],
+            "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"],
             "supports_credentials": True,
             "max_age": 86400
         }
     })
-    jwt.init_app(app)
-    bcrypt.init_app(app)
 
     # Token blacklist storage (in-memory for simplicity)
     blacklisted_tokens = set()
@@ -69,7 +62,7 @@ def create_app():
 
     @app.route('/')
     def index():
-        return jsonify({"message": "Welcome to the Elysian Travels API! Use /api endpoints to interact with the API."})
+        return jsonify({"message": "Welcome to the Aurelian Travels API! Use /api endpoints to interact with the API."})
 
     # AUTHENTICATION ROUTES
     @app.route('/api/auth/register', methods=['POST'])
@@ -129,27 +122,18 @@ def create_app():
         from models import User
         data = request.get_json()
         
-        print("Google login request data:", data)
-
         if not data or not isinstance(data, dict):
-            print("Error: Invalid request data")
             return jsonify({"error": "Invalid request data"}), 400
 
         code = data.get('code')
         if not code:
-            print("Error: Google authorization code is required")
             return jsonify({"error": "Google authorization code is required"}), 400
 
         try:
-            # Updated Google OAuth configuration
             client_id = os.getenv('GOOGLE_CLIENT_ID')
             client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
             redirect_uri = os.getenv('GOOGLE_REDIRECT_URI', 'http://localhost:3000')
             
-            print(f"Using GOOGLE_CLIENT_ID: {client_id}")
-            print(f"Using redirect_uri: {redirect_uri}")
-
-            # Exchange authorization code for tokens
             token_url = "https://oauth2.googleapis.com/token"
             token_data = {
                 'code': code,
@@ -159,70 +143,38 @@ def create_app():
                 'grant_type': 'authorization_code',
             }
             
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-
-            token_response = requests.post(
-                token_url,
-                data=token_data,
-                headers=headers,
-                timeout=10
-            )
-
+            headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+            token_response = requests.post(token_url, data=token_data, headers=headers, timeout=10)
             token_response_json = token_response.json()
-            print("Google token response:", token_response_json)
 
             if token_response.status_code != 200:
                 error_msg = token_response_json.get('error_description', 'Unknown error')
-                print(f"Google token exchange failed: {error_msg}")
-                return jsonify({
-                    "error": "Failed to authenticate with Google",
-                    "details": error_msg
-                }), 400
+                return jsonify({"error": "Failed to authenticate with Google", "details": error_msg}), 400
 
             id_token_str = token_response_json.get('id_token')
             access_token = token_response_json.get('access_token')
             
             if not id_token_str or not access_token:
-                print("Error: Missing tokens in response")
                 return jsonify({"error": "Invalid response from Google"}), 400
 
-            # Verify the ID token
             try:
-                id_info = id_token.verify_oauth2_token(
-                    id_token_str,
-                    google_requests.Request(),
-                    client_id
-                )
+                id_info = id_token.verify_oauth2_token(id_token_str, google_requests.Request(), client_id)
             except ValueError as e:
-                print("Error verifying Google token:", str(e))
                 return jsonify({"error": "Invalid Google token", "details": str(e)}), 400
-
-            print("Google ID token info:", id_info)
 
             email = id_info.get('email')
             if not email:
-                print("Error: Email not provided by Google")
                 return jsonify({"error": "Email not provided by Google"}), 400
 
             name = id_info.get('name', 'Google User')
             picture = id_info.get('picture', 'https://www.gravatar.com/avatar/default?s=200&d=mp')
 
-            # Get or create user
             user = User.query.filter_by(email=email).first()
-
             if not user:
-                user = User(
-                    email=email,
-                    name=name,
-                    avatar=picture,
-                    password_hash=None
-                )
+                user = User(email=email, name=name, avatar=picture, password_hash=None)
                 db.session.add(user)
                 db.session.commit()
 
-            # Create JWT tokens
             access_token = create_access_token(identity=user.id)
             refresh_token = create_refresh_token(identity=user.id)
 
@@ -233,11 +185,7 @@ def create_app():
             })
 
         except Exception as e:
-            print("Google login error:", str(e))
-            return jsonify({
-                "error": "Failed to process Google login",
-                "details": str(e)
-            }), 500
+            return jsonify({"error": "Failed to process Google login", "details": str(e)}), 500
 
     @app.route('/api/auth/logout', methods=['POST'])
     @jwt_required()
@@ -283,14 +231,8 @@ def create_app():
             picture = 'https://www.gravatar.com/avatar/default?s=200&d=mp'
 
             user = User.query.filter_by(email=email).first()
-
             if not user:
-                user = User(
-                    email=email,
-                    name=name,
-                    avatar=picture,
-                    password_hash=None
-                )
+                user = User(email=email, name=name, avatar=picture, password_hash=None)
                 db.session.add(user)
                 db.session.commit()
 
@@ -304,7 +246,6 @@ def create_app():
             })
 
         except Exception as e:
-            print("Apple login error:", str(e))
             return jsonify({"error": "Failed to process Apple login", "details": str(e)}), 500
 
     @app.route('/api/auth/refresh', methods=['POST'])
@@ -370,37 +311,32 @@ def create_app():
         from models import DestinationSuggestion, Destination, User
         data = request.get_json()
         
-        # Validate required fields
         required_fields = ['title', 'location', 'description', 'fees', 'type', 'is_package']
         for field in required_fields:
             if field not in data:
                 return jsonify({"error": f"Missing required field: {field}"}), 400
 
-        # Validate type
         if data['type'] not in ['kenyan', 'international']:
             return jsonify({"error": "Type must be 'kenyan' or 'international'"}), 400
 
-        # Get user_id if authenticated
         user_id = None
         try:
             user_id = get_jwt_identity()
         except:
-            pass  # User may not be authenticated
+            pass
 
-        # Create a new destination suggestion
         suggestion = DestinationSuggestion(
             user_id=user_id,
             title=data['title'],
             location=data['location'],
             description=data['description'],
-            image_url=data.get('image_url', 'https://via.placeholder.com/300'),  # Default image if none provided
+            image_url=data.get('image_url', 'https://via.placeholder.com/300'),
             fees=float(data['fees']),
             type=data['type'],
             is_package=data['is_package'],
             duration=data.get('duration', '')
         )
         
-        # Add to destinations table so it appears immediately
         destination = Destination(
             title=data['title'],
             location=data['location'],
@@ -535,19 +471,39 @@ def create_app():
         
         return jsonify({"message": "Booking cancelled successfully"}), 200
 
-    
+    # SEEDING ENDPOINT
+    @app.route('/api/seed', methods=['POST'])
+    def seed_database_endpoint():
+        from models import Destination
+        from seed import seed_database
+        
+        # Optional: Add a secret key to restrict access
+        data = request.get_json()
+        secret_key = data.get('secret_key') if data else None
+        expected_key = os.getenv('SEED_SECRET_KEY', 'my-secret-key')
+
+        if secret_key != expected_key:
+            return jsonify({"error": "Unauthorized: Invalid secret key"}), 401
+
+        try:
+            # Check if the database already has data
+            if Destination.query.first():
+                return jsonify({"message": "Database already seeded"}), 200
+
+            seed_database()
+            return jsonify({"message": "Database seeded successfully"}), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": f"Failed to seed database: {str(e)}"}), 500
+
+    # Create database tables on startup
     with app.app_context():
         db.create_all()
         print("✔️ Database tables created")
-        
-        if not Destination.query.first():
-            from seed import seed_database
-            seed_database()
-            print("✔️ Sample data seeded")
 
     return app
 
 app = create_app()
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True, host='0.0.0.0', port=int(os.getenv('PORT', 5000)))

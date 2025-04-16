@@ -7,7 +7,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    avatar = db.Column(db.String(500))  # Increased to handle longer URLs
+    avatar = db.Column(db.String(500))
     password_hash = db.Column(db.String(128))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
@@ -32,14 +32,14 @@ class Destination(db.Model):
     __tablename__ = 'destinations'
     
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150), nullable=False)  # Increased for longer titles
-    location = db.Column(db.String(150), nullable=False)  # Increased for complex locations
+    title = db.Column(db.String(150), nullable=False)
+    location = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
-    image_url = db.Column(db.String(1000))  # Increased to handle long URLs
+    image_url = db.Column(db.String(1000))
     fees = db.Column(db.Float, nullable=False)
-    type = db.Column(db.String(20), nullable=False)  # 'kenyan' or 'international'
+    type = db.Column(db.String(20), nullable=False)
     is_package = db.Column(db.Boolean, default=False)
-    duration = db.Column(db.String(100))  # Increased for detailed durations
+    duration = db.Column(db.String(100))
     
     def to_dict(self):
         return {
@@ -58,13 +58,13 @@ class DestinationSuggestion(db.Model):
     __tablename__ = 'destination_suggestions'
     
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Optional, for authenticated users
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     title = db.Column(db.String(150), nullable=False)
     location = db.Column(db.String(150), nullable=False)
     description = db.Column(db.Text, nullable=False)
     image_url = db.Column(db.String(1000))
     fees = db.Column(db.Float, nullable=False)
-    type = db.Column(db.String(20), nullable=False)  # 'kenyan' or 'international'
+    type = db.Column(db.String(20), nullable=False)
     is_package = db.Column(db.Boolean, default=False)
     duration = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
@@ -95,7 +95,7 @@ class Booking(db.Model):
     adults = db.Column(db.Integer, default=1)
     children = db.Column(db.Integer, default=0)
     special_requests = db.Column(db.Text)
-    contact_info = db.Column(db.JSON)  # Stores firstName, lastName, email, phone
+    contact_info = db.Column(db.JSON)
     
     def to_dict(self):
         return {
