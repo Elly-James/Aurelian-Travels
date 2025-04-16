@@ -505,6 +505,10 @@ def create_app():
     with app.app_context():
         db.create_all()
         print("✔️ Database tables created")
+        # Add this to log the existing tables
+        inspector = db.inspect(db.engine)
+        tables = inspector.get_table_names()
+        print(f"Tables in database after db.create_all(): {tables}")
 
     return app
 
