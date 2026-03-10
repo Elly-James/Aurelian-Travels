@@ -15,30 +15,53 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 import requests
 
+def get_database_url():
+    """Return a properly formatted DATABASE_URL for SQLAlchemy + Render."""
+    url = os.getenv('RENDER_DATABASE_URL') or os.getenv('DATABASE_URL', 'sqlite:///app.db')
+    # Fix Render's legacy 'postgres://' prefix
+    url = url.replace('postgres://', 'postgresql://')
+    # Append sslmode=require if not already present (required for Render Postgres)
+    if 'postgresql' in url and 'sslmode' not in url:
+        separator = '&' if '?' in url else '?'
+        url = f"{url}{separator}sslmode=require"
+    return url
+
 def create_app():
     app = Flask(__name__)
 
     # Load environment variables
     load_dotenv()
 
-    # App configurations
+    # ── Core config ──────────────────────────────────────────────────────────
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-    # Use RENDER_DATABASE_URL if available (on Render), otherwise fall back to DATABASE_URL (local)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('RENDER_DATABASE_URL') or os.getenv('DATABASE_URL', 'sqlite:///app.db').replace('postgres://', 'postgresql://')
+    app.config['SQLALCHEMY_DATABASE_URI'] = get_database_url()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=24)
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days=30)
     app.config['JWT_BLACKLIST_ENABLED'] = True
     app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 
-    # Initialize extensions
+    # ── SQLAlchemy engine options (tuned for Render free tier) ───────────────
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_size': 2,           # Free Render DB has limited connections
+        'max_overflow': 3,
+        'pool_recycle': 180,      # Recycle before Render drops idle SSL connections
+        'pool_pre_ping': True,    # Verify connection is alive before using it
+        'pool_timeout': 30,
+        'connect_args': {
+            'sslmode': 'require',
+            'connect_timeout': 10,
+        }
+    }
+
+    # ── Extensions ───────────────────────────────────────────────────────────
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
     bcrypt.init_app(app)
 
-    # Configure CORS
+    # ── CORS ─────────────────────────────────────────────────────────────────
     CORS(app, resources={
         r"/api/*": {
             "origins": [
@@ -52,7 +75,7 @@ def create_app():
         }
     })
 
-    # Token blacklist storage (in-memory for simplicity)
+    # ── Token blacklist storage (in-memory for simplicity) ───────────────────
     blacklisted_tokens = set()
 
     @jwt.token_in_blocklist_loader
@@ -60,6 +83,7 @@ def create_app():
         jti = jwt_payload['jti']
         return jti in blacklisted_tokens
 
+    # ── Basic routes ─────────────────────────────────────────────────────────
     @app.route('/')
     def index():
         return jsonify({"message": "Welcome to the Aurelian Travels API! Use /api endpoints to interact with the API."})
@@ -74,7 +98,10 @@ def create_app():
     def debug_endpoint():
         return jsonify({"message": "This is app.py version with /api/test and /api/seed endpoints"})
 
-    # AUTHENTICATION ROUTES
+    # ─────────────────────────────────────────────────────────────────────────
+    #                   AUTHENTICATION ROUTES
+    # ─────────────────────────────────────────────────────────────────────────
+
     @app.route('/api/auth/register', methods=['POST'])
     def register():
         from models import User
@@ -229,7 +256,7 @@ def create_app():
             if not key:
                 return jsonify({"error": "Failed to find matching Apple public key"}), 400
 
-            from pyjwt.algorithms import RSAAlgorithm
+            from jwt.algorithms import RSAAlgorithm
             public_key = RSAAlgorithm.from_jwk(key)
             decoded = pyjwt.decode(id_token_str, public_key, algorithms=['RS256'], audience=os.getenv('APPLE_CLIENT_ID'))
 
@@ -265,7 +292,10 @@ def create_app():
         new_token = create_access_token(identity=current_user)
         return jsonify({'access_token': new_token})
 
-    # DESTINATION ROUTES
+    # ─────────────────────────────────────────────────────────────────────────
+    #                   DESTINATION ROUTES
+    # ─────────────────────────────────────────────────────────────────────────
+
     @app.route('/api/destinations', methods=['GET'])
     def get_destinations():
         from models import Destination, Review
@@ -289,7 +319,7 @@ def create_app():
         return jsonify(destinations_data)
 
     @app.route('/api/destinations/<int:id>', methods=['GET'])
-    def get_destination():
+    def get_destination(id):
         from models import Destination, Review
         destination = Destination.query.get_or_404(id)
         destination_data = destination.to_dict()
@@ -409,7 +439,10 @@ def create_app():
             
         return jsonify(reviews_data)
 
-    # BOOKING ROUTES
+    # ─────────────────────────────────────────────────────────────────────────
+    #                   BOOKING ROUTES
+    # ─────────────────────────────────────────────────────────────────────────
+
     @app.route('/api/bookings', methods=['GET'])
     @jwt_required()
     def get_user_bookings():
@@ -481,7 +514,10 @@ def create_app():
         
         return jsonify({"message": "Booking cancelled successfully"}), 200
 
-    # SEEDING ENDPOINT
+    # ─────────────────────────────────────────────────────────────────────────
+    #                   SEEDING ENDPOINT
+    # ─────────────────────────────────────────────────────────────────────────
+
     @app.route('/api/seed', methods=['POST'])
     def seed_database_endpoint():
         from models import Destination
@@ -506,27 +542,32 @@ def create_app():
             db.session.rollback()
             return jsonify({"error": f"Failed to seed database: {str(e)}"}), 500
 
-    # Create database tables on startup
+    # ── DB init on startup ───────────────────────────────────────────────────
     with app.app_context():
-        # Test database connection
+        # Test database connection — log but DO NOT crash on failure
         try:
-            db.engine.connect()
+            with db.engine.connect() as conn:
+                pass
             print("✔️ Successfully connected to the database")
         except Exception as e:
-            print(f"❌ Failed to connect to the database: {str(e)}")
-            raise e  # Raise the exception to fail the deployment and log the error
+            print(f"⚠️ Warning: Could not connect to the database at startup: {e}")
+            print("  The app will still start. Connections will be retried per-request.")
 
-        # Import all models to ensure they are registered with SQLAlchemy
+        # Import models so SQLAlchemy registers them
         from models import User, Destination, DestinationSuggestion, Review, Booking
+        
         try:
             db.create_all()
-            print("✔️ Database tables created")
+            print("✔️ Database tables created / verified")
         except Exception as e:
-            print(f"❌ Failed to create database tables: {str(e)}")
+            print(f"⚠️ Warning: db.create_all() failed: {e}")
 
-        inspector = db.inspect(db.engine)
-        tables = inspector.get_table_names()
-        print(f"Tables in database after db.create_all(): {tables}")
+        try:
+            inspector = db.inspect(db.engine)
+            tables = inspector.get_table_names()
+            print(f"Tables in database: {tables}")
+        except Exception as e:
+            print(f"⚠️ Warning: Could not inspect tables: {e}")
 
     return app
 
