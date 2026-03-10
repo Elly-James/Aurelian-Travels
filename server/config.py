@@ -4,16 +4,18 @@ from datetime import timedelta
 
 load_dotenv()
 
+
 def get_database_url():
     """Get and fix the database URL for SQLAlchemy + Render compatibility."""
     url = os.getenv('DATABASE_URL', '')
-    # Render still sometimes gives 'postgres://' — SQLAlchemy needs 'postgresql://'
+    # Render sometimes gives 'postgres://' — SQLAlchemy needs 'postgresql://'
     url = url.replace('postgres://', 'postgresql://')
     # Ensure SSL is required (critical for Render Postgres)
-    if url and 'sslmode' not in url:
+    if url and 'postgresql' in url and 'sslmode' not in url:
         separator = '&' if '?' in url else '?'
         url = f"{url}{separator}sslmode=require"
     return url
+
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')
@@ -21,13 +23,13 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = get_database_url()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    # Tuned for Render free tier — max ~25 total DB connections allowed
     SQLALCHEMY_ENGINE_OPTIONS = {
-        # Free tier Render Postgres allows max ~25 connections total.
-        # Keep pool small to avoid hitting the limit.
         'pool_size': 2,
         'max_overflow': 3,
         'pool_recycle': 180,       # Recycle connections every 3 min (avoids stale SSL)
-        'pool_pre_ping': True,     # Test connection before using it from pool
+        'pool_pre_ping': True,     # Test connection before using from pool
         'pool_timeout': 30,
         'connect_args': {
             'sslmode': 'require',
@@ -51,8 +53,8 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_ECHO = True
+    # Looser pool settings for local dev (SSL not needed locally)
     SQLALCHEMY_ENGINE_OPTIONS = {
-        # Looser settings for local dev (no SSL needed locally)
         'pool_size': 5,
         'max_overflow': 10,
         'pool_recycle': 300,

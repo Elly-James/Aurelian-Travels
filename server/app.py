@@ -3,8 +3,8 @@ from flask import Flask, request, jsonify
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from flask_jwt_extended import (
-    create_access_token, 
-    jwt_required, 
+    create_access_token,
+    jwt_required,
     get_jwt_identity,
     create_refresh_token,
     get_jwt
@@ -15,9 +15,10 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 import requests
 
+
 def get_database_url():
-    """Return a properly formatted DATABASE_URL for SQLAlchemy + Render."""
-    url = os.getenv('RENDER_DATABASE_URL') or os.getenv('DATABASE_URL', 'sqlite:///app.db')
+    """Return a properly formatted DATABASE_URL for SQLAlchemy + Render free tier."""
+    url = os.getenv('DATABASE_URL', 'sqlite:///app.db')
     # Fix Render's legacy 'postgres://' prefix
     url = url.replace('postgres://', 'postgresql://')
     # Append sslmode=require if not already present (required for Render Postgres)
@@ -26,13 +27,14 @@ def get_database_url():
         url = f"{url}{separator}sslmode=require"
     return url
 
+
 def create_app():
     app = Flask(__name__)
 
     # Load environment variables
     load_dotenv()
 
-    # ── Core config ──────────────────────────────────────────────────────────
+    # ── Core config ───────────────────────────────────────────────────────────
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = get_database_url()
@@ -42,12 +44,12 @@ def create_app():
     app.config['JWT_BLACKLIST_ENABLED'] = True
     app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
 
-    # ── SQLAlchemy engine options (tuned for Render free tier) ───────────────
+    # ── SQLAlchemy engine options — tuned for Render free tier ───────────────
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-        'pool_size': 2,           # Free Render DB has limited connections
+        'pool_size': 2,        # Free Render Postgres has very limited connections
         'max_overflow': 3,
-        'pool_recycle': 180,      # Recycle before Render drops idle SSL connections
-        'pool_pre_ping': True,    # Verify connection is alive before using it
+        'pool_recycle': 180,   # Recycle before Render drops idle SSL connections
+        'pool_pre_ping': True, # Test connection health before using from pool
         'pool_timeout': 30,
         'connect_args': {
             'sslmode': 'require',
@@ -55,18 +57,18 @@ def create_app():
         }
     }
 
-    # ── Extensions ───────────────────────────────────────────────────────────
+    # ── Extensions ────────────────────────────────────────────────────────────
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
     bcrypt.init_app(app)
 
-    # ── CORS ─────────────────────────────────────────────────────────────────
+    # ── CORS ──────────────────────────────────────────────────────────────────
     CORS(app, resources={
         r"/api/*": {
             "origins": [
                 os.getenv('FRONTEND_URL', 'http://localhost:3000'),
-                "https://aurelian-travels-frontend.onrender.com"
+                "https://aurelian-travels-frontend.onrender.com",
             ],
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization", "X-Requested-With"],
@@ -75,7 +77,7 @@ def create_app():
         }
     })
 
-    # ── Token blacklist storage (in-memory for simplicity) ───────────────────
+    # ── Token blacklist (in-memory) ───────────────────────────────────────────
     blacklisted_tokens = set()
 
     @jwt.token_in_blocklist_loader
@@ -83,30 +85,26 @@ def create_app():
         jti = jwt_payload['jti']
         return jti in blacklisted_tokens
 
-    # ── Basic routes ─────────────────────────────────────────────────────────
+    # ── Basic routes ──────────────────────────────────────────────────────────
     @app.route('/')
     def index():
         return jsonify({"message": "Welcome to the Aurelian Travels API! Use /api endpoints to interact with the API."})
 
-    # Temporary test endpoint to confirm deployment
     @app.route('/api/test', methods=['GET'])
     def test_endpoint():
         return jsonify({"message": "Test endpoint is working! This confirms the latest app.py is deployed."})
 
-    # Debug endpoint to confirm the version of app.py
     @app.route('/api/debug', methods=['GET'])
     def debug_endpoint():
         return jsonify({"message": "This is app.py version with /api/test and /api/seed endpoints"})
 
-    # ─────────────────────────────────────────────────────────────────────────
-    #                   AUTHENTICATION ROUTES
-    # ─────────────────────────────────────────────────────────────────────────
+    # ── AUTHENTICATION ROUTES ─────────────────────────────────────────────────
 
     @app.route('/api/auth/register', methods=['POST'])
     def register():
         from models import User
         data = request.get_json()
-        
+
         if not data.get('email') or not data.get('password'):
             return jsonify({"error": "Email and password are required"}), 400
 
@@ -119,13 +117,13 @@ def create_app():
             avatar=data.get('avatar')
         )
         user.set_password(data['password'])
-        
+
         db.session.add(user)
         db.session.commit()
-        
+
         access_token = create_access_token(identity=user.id)
         refresh_token = create_refresh_token(identity=user.id)
-        
+
         return jsonify({
             'access_token': access_token,
             'refresh_token': refresh_token,
@@ -136,7 +134,7 @@ def create_app():
     def login():
         from models import User
         data = request.get_json()
-        
+
         if not data.get('email') or not data.get('password'):
             return jsonify({"error": "Email and password are required"}), 400
 
@@ -147,7 +145,7 @@ def create_app():
 
         access_token = create_access_token(identity=user.id)
         refresh_token = create_refresh_token(identity=user.id)
-        
+
         return jsonify({
             'access_token': access_token,
             'refresh_token': refresh_token,
@@ -158,7 +156,7 @@ def create_app():
     def google_login():
         from models import User
         data = request.get_json()
-        
+
         if not data or not isinstance(data, dict):
             return jsonify({"error": "Invalid request data"}), 400
 
@@ -170,7 +168,7 @@ def create_app():
             client_id = os.getenv('GOOGLE_CLIENT_ID')
             client_secret = os.getenv('GOOGLE_CLIENT_SECRET')
             redirect_uri = os.getenv('GOOGLE_REDIRECT_URI', 'http://localhost:3000')
-            
+
             token_url = "https://oauth2.googleapis.com/token"
             token_data = {
                 'code': code,
@@ -179,7 +177,7 @@ def create_app():
                 'redirect_uri': redirect_uri,
                 'grant_type': 'authorization_code',
             }
-            
+
             headers = {'Content-Type': 'application/x-www-form-urlencoded'}
             token_response = requests.post(token_url, data=token_data, headers=headers, timeout=10)
             token_response_json = token_response.json()
@@ -189,9 +187,9 @@ def create_app():
                 return jsonify({"error": "Failed to authenticate with Google", "details": error_msg}), 400
 
             id_token_str = token_response_json.get('id_token')
-            access_token = token_response_json.get('access_token')
-            
-            if not id_token_str or not access_token:
+            access_token_google = token_response_json.get('access_token')
+
+            if not id_token_str or not access_token_google:
                 return jsonify({"error": "Invalid response from Google"}), 400
 
             try:
@@ -256,9 +254,13 @@ def create_app():
             if not key:
                 return jsonify({"error": "Failed to find matching Apple public key"}), 400
 
-            from jwt.algorithms import RSAAlgorithm
+            from pyjwt.algorithms import RSAAlgorithm
             public_key = RSAAlgorithm.from_jwk(key)
-            decoded = pyjwt.decode(id_token_str, public_key, algorithms=['RS256'], audience=os.getenv('APPLE_CLIENT_ID'))
+            decoded = pyjwt.decode(
+                id_token_str, public_key,
+                algorithms=['RS256'],
+                audience=os.getenv('APPLE_CLIENT_ID')
+            )
 
             email = decoded.get('email')
             if not email:
@@ -292,9 +294,7 @@ def create_app():
         new_token = create_access_token(identity=current_user)
         return jsonify({'access_token': new_token})
 
-    # ─────────────────────────────────────────────────────────────────────────
-    #                   DESTINATION ROUTES
-    # ─────────────────────────────────────────────────────────────────────────
+    # ── DESTINATION ROUTES ────────────────────────────────────────────────────
 
     @app.route('/api/destinations', methods=['GET'])
     def get_destinations():
@@ -336,7 +336,7 @@ def create_app():
         if 'q' in params:
             search_term = f"%{params['q']}%"
             query = query.filter(
-                (Destination.title.ilike(search_term)) | 
+                (Destination.title.ilike(search_term)) |
                 (Destination.location.ilike(search_term))
             )
 
@@ -348,9 +348,9 @@ def create_app():
 
     @app.route('/api/destinations/suggest', methods=['POST'])
     def suggest_destination():
-        from models import DestinationSuggestion, Destination, User
+        from models import DestinationSuggestion, Destination
         data = request.get_json()
-        
+
         required_fields = ['title', 'location', 'description', 'fees', 'type', 'is_package']
         for field in required_fields:
             if field not in data:
@@ -362,7 +362,7 @@ def create_app():
         user_id = None
         try:
             user_id = get_jwt_identity()
-        except:
+        except Exception:
             pass
 
         suggestion = DestinationSuggestion(
@@ -376,7 +376,7 @@ def create_app():
             is_package=data['is_package'],
             duration=data.get('duration', '')
         )
-        
+
         destination = Destination(
             title=data['title'],
             location=data['location'],
@@ -391,8 +391,10 @@ def create_app():
         db.session.add(suggestion)
         db.session.add(destination)
         db.session.commit()
-        
+
         return jsonify(destination.to_dict()), 201
+
+    # ── REVIEW ROUTES ─────────────────────────────────────────────────────────
 
     @app.route('/api/destinations/<int:destination_id>/reviews', methods=['POST'])
     @jwt_required()
@@ -400,34 +402,34 @@ def create_app():
         from models import Review, Destination, User
         data = request.get_json()
         user_id = get_jwt_identity()
-        
-        destination = Destination.query.get_or_404(destination_id)
-        
+
+        Destination.query.get_or_404(destination_id)
+
         if 'rating' not in data or not (1 <= data['rating'] <= 5):
             return jsonify({"error": "Rating must be between 1 and 5"}), 400
-        
+
         review = Review(
             user_id=user_id,
             destination_id=destination_id,
             rating=data['rating'],
             comment=data.get('comment', '')
         )
-        
+
         db.session.add(review)
         db.session.commit()
-        
+
         review_data = review.to_dict()
         user = User.query.get(user_id)
         review_data['user_name'] = user.name if user else 'Anonymous'
         review_data['user_avatar'] = user.avatar if user else None
-        
+
         return jsonify(review_data), 201
 
     @app.route('/api/destinations/<int:destination_id>/reviews', methods=['GET'])
     def get_reviews(destination_id):
         from models import Review, Destination, User
-        destination = Destination.query.get_or_404(destination_id)
-        
+        Destination.query.get_or_404(destination_id)
+
         reviews = Review.query.filter_by(destination_id=destination_id).all()
         reviews_data = []
         for review in reviews:
@@ -436,12 +438,10 @@ def create_app():
             review_data['user_name'] = user.name if user else 'Anonymous'
             review_data['user_avatar'] = user.avatar if user else None
             reviews_data.append(review_data)
-            
+
         return jsonify(reviews_data)
 
-    # ─────────────────────────────────────────────────────────────────────────
-    #                   BOOKING ROUTES
-    # ─────────────────────────────────────────────────────────────────────────
+    # ── BOOKING ROUTES ────────────────────────────────────────────────────────
 
     @app.route('/api/bookings', methods=['GET'])
     @jwt_required()
@@ -449,7 +449,7 @@ def create_app():
         from models import Booking, Destination
         user_id = get_jwt_identity()
         bookings = Booking.query.filter_by(user_id=user_id).all()
-        
+
         bookings_data = []
         for booking in bookings:
             booking_data = booking.to_dict()
@@ -457,7 +457,7 @@ def create_app():
             if destination:
                 booking_data['destination'] = destination.to_dict()
             bookings_data.append(booking_data)
-            
+
         return jsonify(bookings_data)
 
     @app.route('/api/bookings', methods=['POST'])
@@ -466,7 +466,7 @@ def create_app():
         from models import Booking
         data = request.get_json()
         user_id = get_jwt_identity()
-        
+
         try:
             travel_date = datetime.strptime(data['travel_date'], '%Y-%m-%d').date()
         except ValueError:
@@ -496,10 +496,10 @@ def create_app():
                 'phone': data.get('phone', '')
             }
         )
-        
+
         db.session.add(booking)
         db.session.commit()
-        
+
         return jsonify(booking.to_dict()), 201
 
     @app.route('/api/bookings/<int:id>', methods=['DELETE'])
@@ -508,22 +508,19 @@ def create_app():
         from models import Booking
         user_id = get_jwt_identity()
         booking = Booking.query.filter_by(id=id, user_id=user_id).first_or_404()
-        
+
         db.session.delete(booking)
         db.session.commit()
-        
+
         return jsonify({"message": "Booking cancelled successfully"}), 200
 
-    # ─────────────────────────────────────────────────────────────────────────
-    #                   SEEDING ENDPOINT
-    # ─────────────────────────────────────────────────────────────────────────
+    # ── SEEDING ENDPOINT ──────────────────────────────────────────────────────
 
     @app.route('/api/seed', methods=['POST'])
     def seed_database_endpoint():
         from models import Destination
         from seed import seed_database
-        
-        # Optional: Add a secret key to restrict access
+
         data = request.get_json()
         secret_key = data.get('secret_key') if data else None
         expected_key = os.getenv('SEED_SECRET_KEY', 'my-secret-key')
@@ -532,7 +529,6 @@ def create_app():
             return jsonify({"error": "Unauthorized: Invalid secret key"}), 401
 
         try:
-            # Check if the database already has data
             if Destination.query.first():
                 return jsonify({"message": "Database already seeded"}), 200
 
@@ -542,34 +538,36 @@ def create_app():
             db.session.rollback()
             return jsonify({"error": f"Failed to seed database: {str(e)}"}), 500
 
-    # ── DB init on startup ───────────────────────────────────────────────────
+    # ── DB INIT ON STARTUP ────────────────────────────────────────────────────
+    # IMPORTANT: Do NOT raise exceptions here.
+    # A transient SSL hiccup at startup on Render's free tier must NOT kill
+    # gunicorn before it can serve requests. pool_pre_ping handles retries.
     with app.app_context():
-        # Test database connection — log but DO NOT crash on failure
         try:
             with db.engine.connect() as conn:
                 pass
             print("✔️ Successfully connected to the database")
         except Exception as e:
-            print(f"⚠️ Warning: Could not connect to the database at startup: {e}")
-            print("  The app will still start. Connections will be retried per-request.")
+            print(f"⚠️  Warning: Could not connect to the database at startup: {e}")
+            print("   The app will still start. Connections will be retried per-request.")
+            # DO NOT raise here — this is intentional
 
-        # Import models so SQLAlchemy registers them
         from models import User, Destination, DestinationSuggestion, Review, Booking
-        
         try:
             db.create_all()
             print("✔️ Database tables created / verified")
         except Exception as e:
-            print(f"⚠️ Warning: db.create_all() failed: {e}")
+            print(f"⚠️  Warning: db.create_all() failed: {e}")
 
         try:
             inspector = db.inspect(db.engine)
             tables = inspector.get_table_names()
             print(f"Tables in database: {tables}")
         except Exception as e:
-            print(f"⚠️ Warning: Could not inspect tables: {e}")
+            print(f"⚠️  Warning: Could not inspect tables: {e}")
 
     return app
+
 
 app = create_app()
 
