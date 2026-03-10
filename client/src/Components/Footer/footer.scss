@@ -110,10 +110,6 @@
           gap: 1rem;
           width: 100%;
 
-          @media (max-width: 576px) {
-            flex-direction: column;
-          }
-
           input {
             flex: 1;
             padding: 1rem 1.5rem;
@@ -125,6 +121,7 @@
             font-size: 1rem;
             transition: var(--transition);
             backdrop-filter: blur(4px);
+            min-width: 0; /* prevents flex overflow */
 
             &::placeholder {
               color: var(--whiteColor);
@@ -154,6 +151,8 @@
             transition: all 0.4s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             min-width: 130px;
+            white-space: nowrap;
+            flex-shrink: 0;
 
             &:hover {
               background: var(--secondary-color);
@@ -232,6 +231,7 @@
               color: var(--primary-color);
               margin-right: 12px;
               transition: var(--transition);
+              flex-shrink: 0;
             }
 
             &:hover .icon {
@@ -246,11 +246,6 @@
           justify-content: space-between;
           gap: 2rem;
           align-items: flex-start;
-          
-          @media (max-width: 992px) {
-            flex-direction: column;
-            gap: 1.5rem;
-          }
 
           .companyInfo {
             flex: 3;
@@ -263,14 +258,14 @@
             flex: 2;
             align-self: flex-start;
             min-width: 250px;
-            
+
             .paymentMethods {
               padding: 1.2rem;
               border-radius: 0.5rem;
               background: #f5f7fa;
               border: 1px solid #e5e9f0;
               box-shadow: var(--shadow-sm);
-              
+
               .acceptsText {
                 font-size: 1rem;
                 margin-bottom: 1rem;
@@ -329,11 +324,11 @@
             border-radius: 50%;
             background: #f0f2f5;
             transition: var(--transition);
-            
+
             &:hover {
               background: var(--primary-color);
               transform: translateY(-5px);
-              
+
               .icon {
                 color: var(--whiteColor);
               }
@@ -355,14 +350,6 @@
         gap: 2rem;
         margin-top: 1rem;
 
-        @media (max-width: 992px) {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        @media (max-width: 576px) {
-          grid-template-columns: 1fr;
-        }
-
         .linkGroup {
           display: flex;
           flex-direction: column;
@@ -377,7 +364,7 @@
             position: relative;
             padding-bottom: 0.5rem;
             text-transform: uppercase;
-            
+
             &::after {
               content: '';
               position: absolute;
@@ -404,6 +391,7 @@
               font-size: 16px;
               color: var(--primary-color);
               transition: var(--transition);
+              flex-shrink: 0;
             }
 
             a {
@@ -452,6 +440,7 @@
   }
 }
 
+/* ── 1024px and below ─────────────────────────────── */
 @media (max-width: 1024px) {
   .footer {
     .secContent {
@@ -465,9 +454,33 @@
   }
 }
 
+/* ── 992px and below ─────────────────────────────── */
+@media (max-width: 992px) {
+  .footer {
+    .secContent {
+      .footerCard {
+        .footerIntro {
+          .footerContent {
+            flex-direction: column;
+            gap: 1.5rem;
+
+            .paymentMethodsContainer {
+              width: 100%;
+              min-width: unset;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ── 768px and below ─────────────────────────────── */
 @media (max-width: 768px) {
   .footer {
     .secContent {
+      row-gap: 2.5rem;
+
       .contactDiv {
         .text {
           h2 {
@@ -477,29 +490,40 @@
       }
 
       .footerCard {
+        padding: 1.5rem 1.5rem 5rem;
+
         .footerIntro {
           .footerContent {
             flex-direction: column;
-            
+
             .paymentMethodsContainer {
               width: 100%;
-              margin-top: 1.5rem;
+              margin-top: 0;
             }
           }
+        }
+
+        .footerLinks {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.2rem;
         }
       }
     }
   }
 }
 
+/* ── 576px and below ─────────────────────────────── */
 @media (max-width: 576px) {
   .footer {
     padding: 3rem 0 0;
-    
+
     .secContent {
-      padding: 1.5rem 1rem;
-      
+      padding: 1.5rem 0.75rem;
+      row-gap: 2rem;
+
       .contactDiv {
+        gap: 1.2rem;
+
         .text {
           small {
             font-size: 12px;
@@ -509,38 +533,107 @@
             font-size: 1.5rem;
           }
         }
+
+        .inputDiv {
+          .subscriptionForm {
+            flex-direction: column;
+
+            input {
+              width: 100%;
+            }
+
+            .btn {
+              width: 100%;
+              min-width: unset;
+            }
+          }
+        }
       }
 
       .footerCard {
-        padding: 1.5rem 1rem 5rem;
-        
+        padding: 1.2rem 0.75rem 5rem;
+
         .footerIntro {
           .logoDiv {
             .logo {
-              font-size: 1.3rem;
+              font-size: 1.2rem;
 
               .icon {
-                font-size: 25px;
+                font-size: 24px;
+                margin-right: 8px;
+              }
+            }
+          }
+
+          .footerContent {
+            .companyInfo {
+              font-size: 0.88rem;
+            }
+
+            .paymentMethodsContainer {
+              .paymentMethods {
+                padding: 0.8rem;
+
+                .paymentIcons {
+                  justify-content: center;
+                  gap: 0.6rem;
+
+                  .paymentIcon {
+                    height: 26px;
+                    max-width: 48px;
+                  }
+
+                  .mpesa {
+                    height: 26px;
+                    max-width: 48px;
+                  }
+                }
+              }
+            }
+          }
+
+          .footerSocials {
+            gap: 0.8rem;
+
+            a {
+              width: 36px;
+              height: 36px;
+
+              .icon {
+                font-size: 18px;
               }
             }
           }
         }
 
-        .paymentMethodsContainer {
-          .paymentIcons {
-            justify-content: center;
-            gap: 0.8rem;
-            
-            .paymentIcon {
-              height: 28px;
-              max-width: 50px;
+        .footerLinks {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+
+          .linkGroup {
+            .groupTitle {
+              font-size: 0.85rem;
+              margin-bottom: 0.8rem;
             }
 
-            .mpesa {
-              height: 28px;
-              max-width: 50px;
+            .footerList {
+              font-size: 0.82rem;
+              margin-bottom: 0.4rem;
             }
           }
+        }
+      }
+    }
+  }
+}
+
+/* ── 380px and below (very small phones) ─────────────── */
+@media (max-width: 380px) {
+  .footer {
+    .secContent {
+      .footerCard {
+        .footerLinks {
+          grid-template-columns: 1fr;
         }
       }
     }
