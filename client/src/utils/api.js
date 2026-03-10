@@ -1,8 +1,12 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://aurelian-travels-backend.onrender.com/api';
-
-
+// Reads REACT_APP_API_URL (set in Render frontend env vars)
+// Falls back to REACT_APP_API_BASE_URL for local dev compatibility
+// Final fallback is the correct production URL
+const API_BASE_URL = 
+  process.env.REACT_APP_API_URL || 
+  process.env.REACT_APP_API_BASE_URL || 
+  'https://aurelian-travels.onrender.com/api';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -27,7 +31,7 @@ api.interceptors.response.use(
         if (error.response?.status === 401) {
             localStorage.removeItem('token');
             localStorage.removeItem('travel-user');
-            window.location.href = '/'; // Redirect to home on unauthorized
+            window.location.href = '/';
         }
         return Promise.reject(error);
     }
