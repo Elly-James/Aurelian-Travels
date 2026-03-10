@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import './kenyanHolidays.scss';
 import { HiOutlineLocationMarker, HiOutlineClipboardCheck, HiShoppingCart } from 'react-icons/hi';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
+import api from '../../utils/api';
 
 const KenyanHolidays = () => {
   const { addToCart, isAuthenticated, requireAuth, LoadingSpinner, cartItems } = useCart();
@@ -40,8 +40,8 @@ const KenyanHolidays = () => {
   const fetchDestinations = async () => {
     try {
       setLoading(true);
-      const singleResponse = await axios.get('http://localhost:5000/api/destinations?type=kenyan&is_package=false');
-      const packageResponse = await axios.get('http://localhost:5000/api/destinations?type=kenyan&is_package=true');
+      const singleResponse = await api.get('/destinations?type=kenyan&is_package=false');
+      const packageResponse = await api.get('/destinations?type=kenyan&is_package=true');
       setSingleDestinations(singleResponse.data);
       setPackages(packageResponse.data);
       setLoading(false);
@@ -63,7 +63,7 @@ const KenyanHolidays = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/destinations/suggest', formData);
+      const response = await api.post('/destinations/suggest', formData);
       setSuccessMessage('Destination suggestion submitted successfully!');
       await fetchDestinations();
       setFormData({

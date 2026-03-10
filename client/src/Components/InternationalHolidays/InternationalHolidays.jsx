@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import { useCart } from '../context/CartContext';
 import './internationalHolidays.scss';
 import { HiOutlineLocationMarker, HiOutlineClipboardCheck, HiShoppingCart } from 'react-icons/hi';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { FaStar } from 'react-icons/fa';
 import AuthPromptModal from '../Navbar/AuthPromptModal.jsx';
+import api from '../../utils/api';
 
 const InternationalHolidays = () => {
   const { addToCart, isAuthenticated, LoadingSpinner, cartItems } = useCart();
@@ -41,8 +41,8 @@ const InternationalHolidays = () => {
   const fetchDestinations = async () => {
     try {
       setLoading(true);
-      const singleResponse = await axios.get('http://localhost:5000/api/destinations?type=international&is_package=false');
-      const packageResponse = await axios.get('http://localhost:5000/api/destinations?type=international&is_package=true');
+      const singleResponse = await api.get('/destinations?type=international&is_package=false');
+      const packageResponse = await api.get('/destinations?type=international&is_package=true');
       setSingleDestinations(singleResponse.data);
       setPackages(packageResponse.data);
       setLoading(false);
@@ -64,7 +64,7 @@ const InternationalHolidays = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/destinations/suggest', formData);
+      await api.post('/destinations/suggest', formData);
       setSuccessMessage('Destination suggestion submitted successfully!');
       await fetchDestinations();
       setFormData({
@@ -90,7 +90,7 @@ const InternationalHolidays = () => {
     if (!container) return;
 
     const cardWidth = container.querySelector('.destinationCard')?.offsetWidth || 350;
-  
+    const { scrollLeft } = container;
     const maxScroll = Math.max(0, (itemCount - 3) * cardWidth);
 
     setButtons({

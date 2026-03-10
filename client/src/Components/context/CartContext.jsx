@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
 import { bookingsApi, destinationsApi } from '../../utils/api';
+import api from '../../utils/api';
 import './cartcontext.scss';
 
 const CartContext = createContext();
@@ -69,7 +69,7 @@ export const CartProvider = ({ children }) => {
 
     const refreshAccessToken = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/refresh', {}, {
+            const response = await api.post('/auth/refresh', {}, {
                 headers: {
                     Authorization: `Bearer ${refreshToken}`,
                 },
@@ -207,7 +207,7 @@ export const CartProvider = ({ children }) => {
 
     const logoutUser = async () => {
         try {
-            await axios.post('http://localhost:5000/api/auth/logout', {}, {
+            await api.post('/auth/logout', {}, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
