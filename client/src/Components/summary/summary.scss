@@ -195,10 +195,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
-
-            @media (max-width: 768px) {
-              grid-template-columns: 1fr;
-            }
           }
 
           .formGroup {
@@ -218,6 +214,8 @@
               border-radius: 6px;
               font-size: 0.9rem;
               transition: var(--transition);
+              width: 100%;
+              box-sizing: border-box;
 
               &:focus {
                 outline: none;
@@ -306,9 +304,7 @@
               justify-content: center;
               gap: 0.5rem;
 
-              .icon {
-                font-size: 1.2rem;
-              }
+              .icon { font-size: 1.2rem; }
             }
 
             .editBtn {
@@ -402,10 +398,6 @@
           gap: 1rem;
           margin-bottom: 1rem;
 
-          @media (max-width: 576px) {
-            flex-direction: column;
-          }
-
           .paymentOption {
             flex: 1;
             padding: 0.8rem;
@@ -416,9 +408,7 @@
             cursor: pointer;
             transition: var(--transition);
 
-            input {
-              display: none;
-            }
+            input { display: none; }
 
             &.active {
               border-color: var(--PrimaryColor);
@@ -467,13 +457,9 @@
                 color: var(--PrimaryColor);
               }
 
-              input {
-                padding-left: 2.5rem;
-              }
+              input { padding-left: 2.5rem; }
 
-              input:focus + .inputIcon {
-                color: var(--SecondaryColor);
-              }
+              input:focus + .inputIcon { color: var(--SecondaryColor); }
             }
 
             input {
@@ -483,6 +469,7 @@
               border-radius: 6px;
               font-size: 0.9rem;
               transition: var(--transition);
+              box-sizing: border-box;
 
               &:focus {
                 outline: none;
@@ -505,10 +492,6 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
-
-            @media (max-width: 576px) {
-              grid-template-columns: 1fr;
-            }
           }
         }
 
@@ -542,17 +525,68 @@
   }
 }
 
+/* ── 992px and below ─────────────────────────────── */
 @media (max-width: 992px) {
   .summary {
     padding: 5rem 1rem 3rem;
 
     .bookingsList {
       .bookingItem {
-        grid-template-columns: 1fr;
+        display: block; /* override grid */
 
-        .itemImage {
-          img {
-            height: 200px;
+        .itemImage img {
+          height: 220px;
+        }
+      }
+    }
+  }
+}
+
+/* ── 768px and below ─────────────────────────────── */
+@media (max-width: 768px) {
+  .summary {
+    .secTitle {
+      .title { font-size: 2rem; }
+    }
+
+    .bookingsList {
+      .bookingItem {
+        .itemDetails {
+          .editForm {
+            .formRow {
+              grid-template-columns: 1fr;
+            }
+
+            .formActions {
+              flex-direction: column;
+
+              .saveBtn, .cancelBtn {
+                width: 100%;
+                text-align: center;
+              }
+            }
+          }
+
+          .bookingInfo {
+            .itemActions {
+              flex-direction: column;
+
+              .editBtn, .removeBtn {
+                width: 100%;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .paymentSection {
+      .summaryCard {
+        .paymentForm {
+          .cardDetails {
+            .formRow {
+              grid-template-columns: 1fr;
+            }
           }
         }
       }
@@ -560,31 +594,52 @@
   }
 }
 
+/* ── 576px and below ─────────────────────────────── */
 @media (max-width: 576px) {
   .summary {
-    padding: 5rem 0.5rem 3rem;
+    padding: 5rem 0.75rem 3rem;
 
     .secTitle {
-      .title {
-        font-size: 2rem;
-      }
+      margin-bottom: 2rem;
 
-      .subtitle {
-        font-size: 1rem;
+      .title { font-size: 1.6rem; }
+      .subtitle { font-size: 1rem; }
+    }
+
+    .emptySummary {
+      padding: 2rem 1rem;
+
+      p { font-size: 1rem; }
+
+      .emptySummaryActions {
+        flex-direction: column;
+        align-items: center;
+
+        .btn { width: 100%; text-align: center; }
       }
     }
 
     .bookingsList {
+      gap: 1.5rem;
+
       .bookingItem {
         padding: 1rem;
 
-        .itemDetails {
-          .itemActions {
-            flex-direction: column;
+        .itemImage img { height: 190px; }
 
-            .editBtn, .removeBtn {
-              width: 100%;
-            }
+        .itemDetails {
+          h4 { font-size: 1.2rem; }
+
+          .location {
+            font-size: 0.9rem;
+            .icon { font-size: 1rem; }
+          }
+
+          .price { font-size: 1.2rem; }
+          .description { font-size: 0.88rem; }
+
+          .bookingInfo {
+            p { font-size: 0.88rem; }
           }
         }
       }
@@ -592,11 +647,59 @@
 
     .totalAmount {
       padding: 1rem;
+
+      h4 { font-size: 1.2rem; }
+
+      .amountDetails p { font-size: 1rem; }
     }
 
     .paymentSection {
       .summaryCard {
         padding: 1rem;
+
+        h4 { font-size: 1.2rem; }
+
+        .paymentForm {
+          .paymentOptions {
+            flex-direction: column;
+
+            .paymentOption {
+              width: 100%;
+            }
+          }
+
+          .mpesaDetails, .cardDetails {
+            .formGroup {
+              label { font-size: 0.85rem; }
+              input  { font-size: 0.85rem; padding: 0.65rem; }
+            }
+          }
+
+          .payBtn {
+            font-size: 0.95rem;
+            padding: 0.75rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ── 380px and below (very small phones) ─────────── */
+@media (max-width: 380px) {
+  .summary {
+    padding: 5rem 0.5rem 3rem;
+
+    .secTitle .title { font-size: 1.4rem; }
+
+    .bookingsList .bookingItem {
+      padding: 0.8rem;
+
+      .itemImage img { height: 170px; }
+
+      .itemDetails {
+        h4 { font-size: 1.1rem; }
+        .price { font-size: 1.1rem; }
       }
     }
   }

@@ -25,24 +25,24 @@
 
     .secTitle {
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
 
         .title {
             position: relative;
             display: inline-block;
             color: var(--blackColor);
-            font-size: 1.4rem;
+            font-size: 1.8rem;
             font-weight: 600;
 
             &::after {
                 position: absolute;
                 content: '';
                 background: var(--SecondaryColor);
-                height: 4px;
-                width: 80px;
+                height: 5px;
+                width: 120px;
                 left: 50%;
                 transform: translateX(-50%);
-                bottom: -6px;
+                bottom: -8px;
                 border-radius: 10px;
             }
         }
@@ -50,29 +50,32 @@
         .subtitle {
             color: var(--textColor);
             margin-top: 1rem;
-            font-size: 0.9rem;
-            padding: 0 0.5rem;
+            font-size: 1rem;
         }
     }
 
     .secContent {
         display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.2rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        justify-content: center;
 
         .singleDestination {
+            height: 100%;
             display: grid;
-            row-gap: 8px;
+            row-gap: 10px;
             border-radius: 10px;
+            align-items: center;
             background: var(--cardBG);
             box-shadow: 0 2px 4px rgba(140, 140, 141, 0.549);
             overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: 0.3s ease;
+            position: relative;
 
             &:hover {
                 background: var(--cardHover);
                 box-shadow: 1px 4px 4px rgba(85, 85, 114, 0.549);
-                transform: translateY(-3px);
+                transform: translateY(-5px);
             }
 
             .imageDiv {
@@ -85,99 +88,108 @@
                     height: 100%;
                     width: 100%;
                     object-fit: cover;
-                    transition: transform 0.5s ease;
+                    transition: 2s ease;
                 }
-
-                &:hover img { transform: scale(1.05); }
 
                 .destinationType {
                     position: absolute;
-                    bottom: 8px;
-                    left: 8px;
-                    background: rgba(0, 0, 0, 0.7);
+                    bottom: 10px;
+                    left: 10px;
+                    background: var(--typeBadge);
                     color: white;
-                    padding: 3px 7px;
+                    padding: 4px 8px;
                     border-radius: 4px;
-                    font-size: 0.75rem;
+                    font-size: 0.8rem;
                     font-weight: 500;
+                    text-transform: capitalize;
                 }
             }
 
+            &:hover img {
+                transform: scale(1.1);
+            }
+
             .cardInfo {
-                padding: 0.8rem;
+                padding: 1.5rem;
 
                 .destTitle {
                     color: var(--blackColor);
-                    font-size: 1rem;
+                    font-size: 1.25rem;
                     font-weight: 600;
-                    margin-bottom: 0.3rem;
+                    margin-bottom: 0.5rem;
                 }
 
                 .continent {
-                    gap: 0.4rem;
+                    gap: .5rem;
+                    margin-bottom: 1rem;
                     display: flex;
                     align-items: center;
 
                     .icon {
-                        color: var(--greyText);
-                        font-size: 14px;
+                        color: var(--PrimaryColor);
+                        font-size: 18px;
                     }
 
-                    small {
-                        color: var(--greyText);
+                    .name {
+                        color: var(--textColor);
                         font-weight: 500;
-                        font-size: 0.78rem;
+                        font-size: 14px;
                     }
                 }
 
                 .rating-section {
                     display: flex;
                     align-items: center;
-                    margin: 0.4rem 0;
+                    margin-bottom: 0.5rem;
 
                     .star-rating {
                         display: flex;
-                        margin-right: 0.4rem;
+                        margin-right: 0.5rem;
 
                         .star {
                             color: var(--starEmptyColor);
-                            font-size: 0.9rem;
-                            margin-right: 1px;
+                            font-size: 1rem;
+                            margin-right: 2px;
 
-                            &.filled { color: var(--starColor); }
+                            &.filled {
+                                color: var(--starColor);
+                            }
                         }
                     }
 
                     .review-count {
-                        font-size: 0.75rem;
+                        font-size: 0.8rem;
                         color: var(--textColor);
                     }
                 }
 
                 .fees {
+                    width: 100%;
                     display: flex;
                     justify-content: space-between;
-                    padding: 0.4rem 0;
-                    margin: 0.6rem 0;
-                    border-top: 1px solid var(--greyText);
-                    border-bottom: 1px solid var(--greyText);
+                    padding: 0.5rem 0;
+                    margin: 1rem 0;
+                    border-top: 1.5px solid var(--greyText);
+                    border-bottom: 1.5px solid var(--greyText);
 
                     .price {
-                        font-size: 1.2rem;
+                        font-size: 1.5rem;
                         font-weight: 600;
                         color: var(--blackColor);
                     }
                 }
 
                 .desc {
-                    font-size: 0.82rem;
+                    font-size: 13.5px;
                     color: var(--textColor);
-                    margin-bottom: 0.8rem;
+                    font-weight: 400;
+                    margin-bottom: 1rem;
+                    height: 80px;
+                    overflow: hidden;
                     line-height: 1.5;
                     display: -webkit-box;
-                    -webkit-line-clamp: 3;
+                    -webkit-line-clamp: 4;
                     -webkit-box-orient: vertical;
-                    overflow: hidden;
                 }
 
                 .btn {
@@ -185,18 +197,19 @@
                     align-items: center;
                     justify-content: center;
                     gap: 0.5rem;
-                    padding: 0.55rem 1.2rem;
+                    padding: 0.6rem 1.5rem;
                     background: var(--PrimaryColor);
                     color: var(--whiteColor);
                     font-weight: 600;
-                    font-size: 0.85rem;
                     border: none;
                     border-radius: 3rem;
                     cursor: pointer;
-                    transition: background-color 0.3s ease;
+                    transition: 0.3s ease;
                     width: 100%;
 
-                    &:hover:not(:disabled) { background: var(--SecondaryColor); }
+                    &:hover:not(:disabled) {
+                        background: var(--SecondaryColor);
+                    }
 
                     &:disabled {
                         background: var(--inCartColor);
@@ -204,7 +217,9 @@
                         opacity: 0.9;
                     }
 
-                    .icon { font-size: 16px; }
+                    .icon {
+                        font-size: 18px;
+                    }
                 }
             }
         }
@@ -215,6 +230,18 @@
     font-weight: bold;
     margin-right: 0.5rem;
     color: var(--blackColor);
+}
+
+.destinationType {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
 }
 
 .rating-section {
@@ -231,7 +258,9 @@
             font-size: 1rem;
             margin-right: 2px;
 
-            &.filled { color: var(--starColor); }
+            &.filled {
+                color: var(--starColor);
+            }
         }
     }
 
@@ -241,39 +270,104 @@
     }
 }
 
-@media screen and (min-width: 480px) {
+/* ── 480px and below ─────────────────────────────── */
+@media screen and (max-width: 480px) {
     .main {
-        .secContent {
-            grid-template-columns: repeat(2, 1fr);
+        padding: 1.5rem 0.75rem;
+
+        .secTitle {
+            margin-bottom: 1.5rem;
+
+            .title {
+                font-size: 1.3rem;
+
+                &::after {
+                    width: 80px;
+                }
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+                margin-top: 0.8rem;
+            }
         }
 
-        .secTitle .title { font-size: 1.6rem; }
+        .secContent {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+
+            .singleDestination {
+                .imageDiv {
+                    height: 200px;
+                }
+
+                .cardInfo {
+                    padding: 1rem;
+
+                    .destTitle {
+                        font-size: 1.1rem;
+                    }
+
+                    .continent {
+                        .icon { font-size: 16px; }
+                        .name { font-size: 13px; }
+                    }
+
+                    .fees .price {
+                        font-size: 1.3rem;
+                    }
+
+                    .desc {
+                        font-size: 12.5px;
+                        height: 70px;
+                    }
+
+                    .btn {
+                        padding: 0.5rem 1rem;
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+        }
     }
 }
 
+/* ── 576px and below ─────────────────────────────── */
+@media screen and (max-width: 576px) {
+    .main {
+        padding: 1.5rem 0.75rem;
+
+        .secTitle {
+            .title {
+                font-size: 1.4rem;
+            }
+        }
+
+        .secContent {
+            grid-template-columns: 1fr;
+            gap: 1.2rem;
+        }
+    }
+}
+
+/* ── 768px and above ─────────────────────────────── */
 @media screen and (min-width: 768px) {
     .main {
-        padding: 2rem 1.5rem;
-
-        .secTitle .title { font-size: 1.8rem; }
+        padding: 2rem 1rem;
 
         .secContent {
             grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-
-            .singleDestination .imageDiv { height: 220px; }
         }
     }
 }
 
+/* ── 1024px and above ─────────────────────────────── */
 @media screen and (min-width: 1024px) {
     .main {
         padding: 2rem 0;
 
         .secContent {
             grid-template-columns: repeat(3, 1fr);
-
-            .singleDestination .imageDiv { height: 230px; }
         }
     }
 }

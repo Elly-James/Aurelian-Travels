@@ -54,7 +54,7 @@
             }
         }
 
-        /* Mobile nav drawer */
+        /* ── Mobile nav drawer ────────────────────────── */
         .navBar {
             background: var(--whiteColor);
 
@@ -83,7 +83,8 @@
                 justify-content: center;
                 gap: 1.5rem;
                 list-style: none;
-                margin: 0; padding: 0;
+                margin: 0;
+                padding: 0;
 
                 @media screen and (max-width: 768px) {
                     flex-direction: column;
@@ -124,8 +125,10 @@
                         &::after {
                             content: '';
                             position: absolute;
-                            left: 0; bottom: 0;
-                            width: 100%; height: 2px;
+                            left: 0;
+                            bottom: 0;
+                            width: 100%;
+                            height: 2px;
                             background: var(--PrimaryColor);
                             transition: 0.3s ease;
                         }
@@ -206,7 +209,7 @@
     }
 }
 
-/* Auth / user profile elements */
+/* ── Auth / user profile elements ────────────────── */
 .authBtn {
     background: var(--PrimaryColor);
     color: var(--whiteColor);
@@ -227,6 +230,7 @@
     align-items: center;
     gap: 0.4rem;
     flex-wrap: wrap;
+    max-width: 220px;
 
     .profilePic {
         width: 28px;
@@ -265,8 +269,10 @@
 
 .authModal {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(0, 0, 0, 0.55);
     display: flex;
     justify-content: center;
@@ -310,7 +316,99 @@
     }
 }
 
-/* Desktop overrides */
+/* ── 480px and below ─────────────────────────────── */
+@media screen and (max-width: 480px) {
+    .navBarSection {
+        .header {
+            padding: 0.6rem 0.75rem;
+
+            .logoDiv {
+                .logo {
+                    .icon { font-size: 18px; }
+                    span  { font-size: 1rem; }
+                }
+            }
+
+            /* Drawer slightly narrower on small phones */
+            .navBar {
+                width: 90%;
+                max-width: 280px;
+                padding: 1.2rem 0.8rem;
+            }
+
+            .toggleNavbar {
+                .icon { font-size: 1.35rem; }
+            }
+        }
+    }
+
+    .userProfile {
+        gap: 0.3rem;
+        max-width: 160px;
+
+        .profilePic {
+            width: 24px;
+            height: 24px;
+        }
+
+        .userName {
+            font-size: 0.75rem;
+            max-width: 70px;
+        }
+
+        .logoutBtn {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+        }
+    }
+
+    .authBtn {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.8rem;
+    }
+
+    .authModal {
+        padding: 0.75rem;
+
+        .modalContent {
+            padding: 1.2rem 1rem;
+
+            h3 { font-size: 1.05rem; }
+        }
+    }
+}
+
+/* ── 360px and below (very small phones) ─────────── */
+@media screen and (max-width: 360px) {
+    .navBarSection {
+        .header {
+            padding: 0.5rem 0.6rem;
+
+            .logoDiv .logo {
+                .icon { font-size: 16px; }
+                span  { font-size: 0.9rem; }
+            }
+
+            .navBar {
+                width: 92%;
+                max-width: 260px;
+            }
+        }
+    }
+
+    .userProfile {
+        max-width: 130px;
+
+        .userName { max-width: 55px; }
+    }
+
+    .authBtn {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* ── Desktop 769px and above ─────────────────────── */
 @media screen and (min-width: 769px) {
     .navBarSection {
         .header {
@@ -332,6 +430,7 @@
     }
 }
 
+/* ── Desktop 1024px and above ────────────────────── */
 @media screen and (min-width: 1024px) {
     .navBarSection .header {
         padding: 1rem 3rem;

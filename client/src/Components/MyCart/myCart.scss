@@ -255,10 +255,6 @@
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 1rem;
-
-          @media (max-width: 768px) {
-            grid-template-columns: 1fr;
-          }
         }
 
         .formGroup {
@@ -278,6 +274,8 @@
             border-radius: 6px;
             font-size: 0.9rem;
             transition: var(--transition);
+            width: 100%;
+            box-sizing: border-box;
 
             &:focus {
               outline: none;
@@ -436,13 +434,14 @@
   }
 }
 
+/* ── 992px and below ─────────────────────────────── */
 @media (max-width: 992px) {
   .myCart {
     padding: 5rem 1rem 3rem;
 
     .cartItems {
       .cartItem {
-        grid-template-columns: 1fr;
+        display: block; /* override grid */
 
         .itemImage {
           img {
@@ -454,13 +453,37 @@
   }
 }
 
-@media (max-width: 576px) {
+/* ── 768px and below ─────────────────────────────── */
+@media (max-width: 768px) {
   .myCart {
-    padding: 5rem 0.5rem 3rem;
-
     .secTitle {
       .title {
         font-size: 2rem;
+      }
+    }
+
+    .cartItems {
+      .cartItem {
+        .bookingForm {
+          .formRow {
+            grid-template-columns: 1fr;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ── 576px and below ─────────────────────────────── */
+@media (max-width: 576px) {
+  .myCart {
+    padding: 5rem 0.75rem 3rem;
+
+    .secTitle {
+      margin-bottom: 2rem;
+
+      .title {
+        font-size: 1.6rem;
       }
 
       .subtitle {
@@ -468,7 +491,27 @@
       }
     }
 
+    .emptyCart {
+      padding: 2rem 1rem;
+
+      p {
+        font-size: 1rem;
+      }
+
+      .emptyCartActions {
+        flex-direction: column;
+        align-items: center;
+
+        .btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+
     .cartItems {
+      gap: 1.5rem;
+
       .cartItem {
         padding: 1rem;
 
@@ -479,18 +522,53 @@
 
           .itemInfo {
             h4 {
-              font-size: 1.4rem;
+              font-size: 1.2rem;
+            }
+
+            .location {
+              font-size: 0.9rem;
+
+              .icon { font-size: 1rem; }
             }
 
             .price {
               font-size: 1.2rem;
             }
+
+            .description {
+              font-size: 0.88rem;
+            }
           }
         }
 
         .bookingForm {
+          padding: 0.8rem;
+
+          h5 {
+            font-size: 1rem;
+          }
+
+          .formRow {
+            grid-template-columns: 1fr;
+          }
+
+          .formGroup {
+            label { font-size: 0.85rem; }
+            input, textarea { font-size: 0.85rem; padding: 0.6rem; }
+          }
+
+          .reviewSection {
+            .submitReviewBtn {
+              width: 100%;
+            }
+          }
+
           .itemActions {
             flex-direction: column;
+
+            .btn {
+              width: 100%;
+            }
           }
         }
       }
@@ -499,6 +577,30 @@
     .proceedToSummary {
       .proceedBtn {
         padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+      }
+    }
+  }
+}
+
+/* ── 380px and below (very small phones) ─────────── */
+@media (max-width: 380px) {
+  .myCart {
+    padding: 5rem 0.5rem 3rem;
+
+    .secTitle .title {
+      font-size: 1.4rem;
+    }
+
+    .cartItems .cartItem {
+      padding: 0.8rem;
+
+      .itemImage img {
+        height: 180px;
+      }
+
+      .itemInfo h4 {
+        font-size: 1.1rem;
       }
     }
   }
