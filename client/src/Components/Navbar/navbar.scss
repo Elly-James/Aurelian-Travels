@@ -20,12 +20,16 @@
         justify-content: space-between;
         background: var(--whiteColor);
         width: 100%;
-        padding: 0.8rem 1rem;
+        padding: 0.8rem 2rem;
         z-index: 1000;
         box-shadow: 0 2px 4px rgba(2, 15, 29, 0.1);
         border-bottom: 2px solid var(--SecondaryColor);
+        gap: 1rem;
 
+        /* ── Logo ── */
         .logoDiv {
+            flex-shrink: 0; /* never let logo collapse */
+
             .logo {
                 display: flex;
                 align-items: center;
@@ -33,7 +37,7 @@
                 text-decoration: none;
 
                 .icon {
-                    font-size: 22px;
+                    font-size: 26px;
                     color: var(--PrimaryColor);
                     transition: 0.3s ease;
                     flex-shrink: 0;
@@ -41,8 +45,8 @@
 
                 span {
                     color: var(--blackColor);
-                    font-weight: 600;
-                    font-size: 1.2rem;
+                    font-weight: 700;
+                    font-size: 1.3rem;
                     transition: 0.3s ease;
                     white-space: nowrap;
                 }
@@ -54,54 +58,27 @@
             }
         }
 
-        /* ── Mobile nav drawer ────────────────────────── */
+        /* ── Desktop nav (centre + right) ── */
         .navBar {
-            background: var(--whiteColor);
-
-            @media screen and (max-width: 768px) {
-                position: fixed;
-                height: max-content;
-                width: 85%;
-                max-width: 300px;
-                border-radius: 1rem;
-                top: -500rem;
-                left: 50%;
-                padding: 1.5rem 1rem;
-                transform: translateX(-50%);
-                z-index: 2000;
-                box-shadow: 0 4px 12px rgba(2, 15, 29, 0.15);
-                transition: 0.4s ease;
-
-                &.activeNavbar {
-                    top: 5rem;
-                }
-            }
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0; /* gap handled by margin-left on btnContainer */
+            flex: 1; /* take remaining space so logo stays left */
 
             .navLists {
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                gap: 1.5rem;
+                gap: 1.8rem;
                 list-style: none;
                 margin: 0;
                 padding: 0;
-
-                @media screen and (max-width: 768px) {
-                    flex-direction: column;
-                    width: 100%;
-                    gap: 0;
-                }
+                flex-wrap: nowrap;
 
                 .navItem {
-                    @media screen and (max-width: 768px) {
-                        width: 100%;
-                        text-align: center;
-                        padding: 0.3rem 0;
-                    }
-
                     .navLink {
                         color: var(--textColor);
-                        font-size: 0.88rem;
+                        font-size: 0.9rem;
                         font-weight: 500;
                         position: relative;
                         padding: 0.4rem 0;
@@ -109,12 +86,21 @@
                         transition: color 0.3s ease;
                         white-space: nowrap;
 
-                        &:hover { color: var(--PrimaryColor); }
+                        &::after {
+                            content: '';
+                            position: absolute;
+                            left: 0;
+                            bottom: 0;
+                            width: 0;
+                            height: 2px;
+                            background: var(--PrimaryColor);
+                            transition: width 0.3s ease;
+                        }
 
-                        @media screen and (max-width: 768px) {
-                            display: block;
-                            padding: 0.6rem 0;
-                            font-size: 0.95rem;
+                        &:hover {
+                            color: var(--PrimaryColor);
+
+                            &::after { width: 100%; }
                         }
                     }
 
@@ -123,33 +109,17 @@
                         font-weight: 600;
 
                         &::after {
-                            content: '';
-                            position: absolute;
-                            left: 0;
-                            bottom: 0;
                             width: 100%;
-                            height: 2px;
                             background: var(--PrimaryColor);
-                            transition: 0.3s ease;
-                        }
-
-                        @media screen and (max-width: 768px) {
-                            background: var(--inputColor);
-                            border-radius: 5px;
-                            padding: 0.6rem 1rem;
-
-                            &::after { display: none; }
                         }
                     }
                 }
             }
 
+            /* Login/user profile sits at the right end of the navBar flex */
             .btnContainer {
-                @media screen and (max-width: 768px) {
-                    width: 100%;
-                    margin-top: 0.8rem;
-                    text-align: center;
-                }
+                flex-shrink: 0;
+                margin-left: 2rem; /* guaranteed gap from last nav link */
 
                 .bookBtn {
                     padding: 0.5rem 1.2rem;
@@ -170,55 +140,29 @@
                 }
             }
 
+            /* Close button — hidden on desktop */
             .closeNavbar {
                 display: none;
-
-                @media screen and (max-width: 768px) {
-                    display: block;
-                    position: absolute;
-                    top: 0.8rem;
-                    right: 1rem;
-
-                    .icon {
-                        font-size: 1.4rem;
-                        color: var(--PrimaryColor);
-                        cursor: pointer;
-
-                        &:hover { color: var(--SecondaryColor); }
-                    }
-                }
             }
         }
 
+        /* ── Hamburger — hidden on desktop ── */
         .toggleNavbar {
             display: none;
-
-            @media screen and (max-width: 768px) {
-                display: flex;
-                align-items: center;
-                cursor: pointer;
-
-                .icon {
-                    font-size: 1.5rem;
-                    color: var(--PrimaryColor);
-                }
-
-                &:hover .icon { color: var(--SecondaryColor); }
-            }
         }
     }
 }
 
-/* ── Auth / user profile elements ────────────────── */
+/* ── Auth / user profile ── */
 .authBtn {
     background: var(--PrimaryColor);
     color: var(--whiteColor);
-    padding: 0.5rem 1.2rem;
+    padding: 0.5rem 1.4rem;
     border: none;
     border-radius: 3rem;
     cursor: pointer;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     transition: 0.3s ease;
     white-space: nowrap;
 
@@ -228,35 +172,36 @@
 .userProfile {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-    max-width: 220px;
+    gap: 0.5rem;
 
     .profilePic {
-        width: 28px;
-        height: 28px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         object-fit: cover;
         flex-shrink: 0;
+        border: 2px solid var(--PrimaryColor);
     }
 
     .userName {
-        font-size: 0.82rem;
+        font-size: 0.85rem;
         color: var(--textColor);
-        max-width: 100px;
+        max-width: 110px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        font-weight: 500;
     }
 
     .logoutBtn {
         background: transparent;
-        border: 1px solid var(--PrimaryColor);
+        border: 1.5px solid var(--PrimaryColor);
         color: var(--PrimaryColor);
-        padding: 0.25rem 0.6rem;
+        padding: 0.28rem 0.7rem;
         border-radius: 3rem;
         cursor: pointer;
-        font-size: 0.75rem;
+        font-size: 0.78rem;
+        font-weight: 600;
         transition: 0.3s ease;
         white-space: nowrap;
 
@@ -267,6 +212,7 @@
     }
 }
 
+/* ── Auth modal ── */
 .authModal {
     position: fixed;
     top: 0;
@@ -282,16 +228,33 @@
 
     .modalContent {
         background: var(--whiteColor);
-        padding: 1.5rem;
+        padding: 2rem 1.5rem;
         border-radius: 12px;
         width: 100%;
         max-width: 380px;
         text-align: center;
 
         h3 {
-            margin-bottom: 1.2rem;
+            margin-bottom: 0.5rem;
             color: var(--blackColor);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        p {
+            color: var(--textColor);
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .error-message {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            color: #c0392b;
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            margin-bottom: 1rem;
         }
 
         .authProviders {
@@ -299,16 +262,35 @@
             flex-direction: column;
             gap: 0.8rem;
             margin-bottom: 1.2rem;
+
+            .googleLoginBtn {
+                width: 100%;
+                padding: 0.7rem 1rem;
+                background: var(--whiteColor);
+                color: var(--blackColor);
+                border: 1.5px solid var(--greyText);
+                border-radius: 6px;
+                font-size: 0.92rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: 0.3s ease;
+
+                &:hover {
+                    border-color: var(--PrimaryColor);
+                    color: var(--PrimaryColor);
+                }
+            }
         }
 
         .closeModal {
             background: var(--greyText);
             color: var(--whiteColor);
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1.2rem;
             border: none;
             border-radius: 3rem;
             cursor: pointer;
             font-size: 0.9rem;
+            font-weight: 500;
             transition: 0.3s ease;
 
             &:hover { background: var(--textColor); }
@@ -316,125 +298,225 @@
     }
 }
 
-/* ── 480px and below ─────────────────────────────── */
-@media screen and (max-width: 480px) {
-    .navBarSection {
-        .header {
-            padding: 0.6rem 0.75rem;
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+═══════════════════════════════════════════════════ */
 
-            .logoDiv {
-                .logo {
-                    .icon { font-size: 18px; }
-                    span  { font-size: 1rem; }
+/* ── Below 1100px: shrink gaps to stop clipping ── */
+@media screen and (max-width: 1100px) {
+    .navBarSection .header {
+        padding: 0.8rem 1.5rem;
+
+        .navBar {
+            .navLists {
+                gap: 1.2rem;
+
+                .navItem .navLink {
+                    font-size: 0.85rem;
                 }
             }
 
-            /* Drawer slightly narrower on small phones */
-            .navBar {
-                width: 90%;
-                max-width: 280px;
-                padding: 1.2rem 0.8rem;
+            .btnContainer {
+                margin-left: 1.5rem;
+            }
+        }
+    }
+}
+
+/* ── Below 900px: further tighten ── */
+@media screen and (max-width: 900px) {
+    .navBarSection .header {
+        padding: 0.8rem 1rem;
+
+        .logoDiv .logo {
+            .icon { font-size: 22px; }
+            span  { font-size: 1.1rem; }
+        }
+
+        .navBar {
+            .navLists {
+                gap: 0.9rem;
+
+                .navItem .navLink {
+                    font-size: 0.8rem;
+                }
             }
 
+            .btnContainer {
+                margin-left: 1rem;
+            }
+        }
+    }
+
+    .authBtn {
+        font-size: 0.8rem;
+        padding: 0.45rem 1rem;
+    }
+
+    .userProfile {
+        .userName { max-width: 80px; }
+    }
+}
+
+/* ── 768px and below: mobile drawer ── */
+@media screen and (max-width: 768px) {
+    .navBarSection {
+        .header {
+            padding: 0.8rem 1rem;
+
+            .logoDiv .logo {
+                .icon { font-size: 24px; }
+                span  { font-size: 1.2rem; }
+            }
+
+            /* Mobile drawer */
+            .navBar {
+                position: fixed;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                height: max-content;
+                width: 85%;
+                max-width: 300px;
+                border-radius: 1rem;
+                top: -500rem;
+                left: 50%;
+                padding: 2rem 1.5rem 1.5rem;
+                transform: translateX(-50%);
+                z-index: 2000;
+                box-shadow: 0 4px 20px rgba(2, 15, 29, 0.18);
+                transition: top 0.4s ease;
+                background: var(--whiteColor);
+                gap: 0;
+
+                &.activeNavbar {
+                    top: 4.8rem;
+                }
+
+                .navLists {
+                    flex-direction: column;
+                    width: 100%;
+                    gap: 0;
+                    margin-bottom: 1rem;
+
+                    .navItem {
+                        width: 100%;
+                        text-align: center;
+                        border-bottom: 1px solid var(--inputColor);
+
+                        &:last-child { border-bottom: none; }
+
+                        .navLink {
+                            display: block;
+                            padding: 0.75rem 0;
+                            font-size: 0.95rem;
+                            white-space: normal;
+
+                            &::after { display: none; }
+                        }
+
+                        .activeLink {
+                            background: var(--inputColor);
+                            border-radius: 6px;
+                            padding: 0.75rem 1rem;
+                            color: var(--PrimaryColor);
+                        }
+                    }
+                }
+
+                .btnContainer {
+                    width: 100%;
+                    text-align: center;
+                    padding-top: 0.8rem;
+                    margin-left: 0; /* reset desktop margin */
+                }
+
+                /* Show close button on mobile */
+                .closeNavbar {
+                    display: block;
+                    position: absolute;
+                    top: 0.8rem;
+                    right: 1rem;
+
+                    .icon {
+                        font-size: 1.5rem;
+                        color: var(--PrimaryColor);
+                        cursor: pointer;
+
+                        &:hover { color: var(--SecondaryColor); }
+                    }
+                }
+            }
+
+            /* Show hamburger on mobile */
             .toggleNavbar {
-                .icon { font-size: 1.35rem; }
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+                flex-shrink: 0;
+
+                .icon {
+                    font-size: 1.6rem;
+                    color: var(--PrimaryColor);
+                }
+
+                &:hover .icon { color: var(--SecondaryColor); }
             }
         }
     }
 
     .userProfile {
-        gap: 0.3rem;
-        max-width: 160px;
-
-        .profilePic {
-            width: 24px;
-            height: 24px;
-        }
+        flex-direction: column;
+        align-items: center;
+        gap: 0.4rem;
 
         .userName {
-            font-size: 0.75rem;
-            max-width: 70px;
+            max-width: 140px;
+            font-size: 0.88rem;
         }
 
         .logoutBtn {
-            font-size: 0.7rem;
-            padding: 0.2rem 0.5rem;
+            width: 100%;
         }
     }
 
     .authBtn {
-        padding: 0.4rem 0.9rem;
-        font-size: 0.8rem;
-    }
-
-    .authModal {
-        padding: 0.75rem;
-
-        .modalContent {
-            padding: 1.2rem 1rem;
-
-            h3 { font-size: 1.05rem; }
-        }
+        width: 100%;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
     }
 }
 
-/* ── 360px and below (very small phones) ─────────── */
-@media screen and (max-width: 360px) {
-    .navBarSection {
-        .header {
-            padding: 0.5rem 0.6rem;
-
-            .logoDiv .logo {
-                .icon { font-size: 16px; }
-                span  { font-size: 0.9rem; }
-            }
-
-            .navBar {
-                width: 92%;
-                max-width: 260px;
-            }
-        }
-    }
-
-    .userProfile {
-        max-width: 130px;
-
-        .userName { max-width: 55px; }
-    }
-
-    .authBtn {
-        padding: 0.35rem 0.7rem;
-        font-size: 0.75rem;
-    }
-}
-
-/* ── Desktop 769px and above ─────────────────────── */
-@media screen and (min-width: 769px) {
-    .navBarSection {
-        .header {
-            padding: 1rem 2rem;
-
-            .logoDiv .logo {
-                .icon { font-size: 25px; }
-                span  { font-size: 1.5rem; }
-            }
-
-            .navBar {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-
-                .navLists { gap: 1.5rem; }
-            }
-        }
-    }
-}
-
-/* ── Desktop 1024px and above ────────────────────── */
-@media screen and (min-width: 1024px) {
+/* ── 480px and below ── */
+@media screen and (max-width: 480px) {
     .navBarSection .header {
-        padding: 1rem 3rem;
+        padding: 0.65rem 0.75rem;
 
-        .navBar .navLists { gap: 2rem; }
+        .logoDiv .logo {
+            .icon { font-size: 20px; }
+            span  { font-size: 1rem; }
+        }
+
+        .navBar.activeNavbar {
+            top: 4.3rem;
+        }
+    }
+
+    .authModal .modalContent {
+        padding: 1.5rem 1rem;
+
+        h3 { font-size: 1.1rem; }
+    }
+}
+
+/* ── 360px and below ── */
+@media screen and (max-width: 360px) {
+    .navBarSection .header {
+        padding: 0.5rem 0.6rem;
+
+        .logoDiv .logo {
+            .icon { font-size: 18px; }
+            span  { font-size: 0.9rem; }
+        }
     }
 }
